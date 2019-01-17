@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.CitySyncServiceDao">
+    <select id="selectCityToDay" resultType="org.taiji.rst.pojo.CitySyncService">
+        select * from city_service_num_today where service_code=#{service_code} and synctime=#{date_time}
+    </select>
+</mapper>

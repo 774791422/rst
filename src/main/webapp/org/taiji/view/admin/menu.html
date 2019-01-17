@@ -1,0 +1,42 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{{'ADMIN.MENUS.MENU'|translate}}</h3>
+                    <div class="box-tools">
+                        <i class="fa fa-plus toolbar-icon" ng-click="newMenu()" title="{{'COMMON.NEW'|translate}}" style="margin-top: 4px;"></i>
+                        <div class="input-group input-group-sm" style="width: 150px; margin-left: 5px; float: right;">
+                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>{{'ADMIN.MENUS.MENU_NAME'|translate}}</th>
+                            <th>{{'ADMIN.MENUS.ACTION'|translate}}</th>
+                            <th>{{'OPERATION.NAME'|translate}}</th>
+                        </tr>
+                        <tr ng-repeat="menu in menuList">
+                            <td>{{menu.functionName}}</td>
+                            <td>{{menu.action}}</td>
+                            <td>
+                                <i class="fa fa-edit toolbar-icon" ng-click="editMenu(menu.id)" title="{{'COMMON.EDIT'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-trash-o toolbar-icon"  ng-click="deleteMenu(menu.id)" title="{{'COMMON.DELETE'|translate}}"></i>&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

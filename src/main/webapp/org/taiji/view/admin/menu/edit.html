@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title">{{'ADMIN.MENUS.MENU_NEW'|translate}}</h4>
+</div>
+<div class="modal-body" ng-init="initData()">
+    <form class="form-horizontal">
+        <input type="hidden"  ng-model="menu.parentId">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">父级菜单</label>
+            <div class="col-sm-10">
+                <ul id="tree" class="ztree" ng-init="initTree()"></ul>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">菜单名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="menu.functionName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">路径</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="menu.action">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">排序</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="menu.functionDesc">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ok()">{{'COMMON.OK'|translate}}</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">
+        {{'COMMON.CANCEL'|translate}}
+    </button>
+</div>

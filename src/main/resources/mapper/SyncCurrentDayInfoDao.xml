@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.SyncCurrentDayInfoDao">
+    <select id="selectBySyncDay" resultType="org.taiji.rst.pojo.SyncCurrentDayInfo">
+        select * from sync_current_day_info where node_id=#{arg0} and sync_date=#{arg1}
+    </select>
+    <select id="selectDayChangeList" resultType="java.util.Map">
+        SELECT
+	c.city,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 6 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day1,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 5 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day2,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 4 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day3,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 3 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day4,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 2 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day5,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 1 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day6,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 0 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day7
+FROM
+	city_info c
+ORDER BY
+	orders
+    </select>
+    <select id="selectDay" resultType="java.util.Map">
+        SELECT
+	DATE_FORMAT(
+		DATE_SUB(NOW(), INTERVAL 6 DAY),
+		'%Y-%m-%d'
+	) day1,
+	DATE_FORMAT(
+		DATE_SUB(NOW(), INTERVAL 5 DAY),
+		'%Y-%m-%d'
+	) day2,
+	DATE_FORMAT(
+		DATE_SUB(NOW(), INTERVAL 4 DAY),
+		'%Y-%m-%d'
+	) day3,
+	DATE_FORMAT(
+		DATE_SUB(NOW(), INTERVAL 3 DAY),
+		'%Y-%m-%d'
+	) day4,
+	DATE_FORMAT(
+		DATE_SUB(NOW(), INTERVAL 2 DAY),
+		'%Y-%m-%d'
+	) day5,
+	DATE_FORMAT(
+		DATE_SUB(NOW(), INTERVAL 1 DAY),
+		'%Y-%m-%d'
+	) day6,
+	DATE_FORMAT(NOW(), '%Y-%m-%d') day7
+    </select>
+	<select id="selectMap" resultType="java.util.Map">
+		SELECT
+		c.city,
+		IFNULL(
+		(
+		SELECT
+		t.sync_num
+		FROM
+		(
+		select count(distinct city,service)as sync_num, REPLACE(city,'省直','省本级')as city from codestring where city='省直'
+		UNION all
+		select count(distinct city,service)as sync_num,CONCAT(city,'市')as city from codestring where (city&lt;&gt;'省直' ) group by city
+		) t
+		WHERE
+		t.city = c.city
+		),
+		0
+		) sync_num
+		FROM
+		city_info c
+		ORDER BY
+		orders
+	</select>
+
+	<select id="sxServiceMap" resultType="java.util.Map">
+select sum(s.sync_num) as sync_num,b.service,replace(b.city,'省直','省本级')as city from sync_current_day_info s,(select cid,c.service,c.city from codestring c,(
+        select i.cid,i.target_nick from chnl_info_state i, node_info n where i.chnl_name=n.node_name)a
+        where c.commonname=a.target_nick)b
+        where s.node_id=b.cid
+        and s.sync_date=#{date_time}
+        group by b.service,b.city
+	</select>
+	<select id="cityServiceMap" resultType="java.util.Map">
+		select sum(d.sync_num)as sync_num,d.service,d.city from (
+		select s.sync_num,c.service,s.city from codestring c,city_service_num_today s
+		where c.city_service_code=s.service_code
+		and s.synctime=#{date_time}
+		and s.city=#{city}
+		)d
+		group by d.service,d.city
+	</select>
+	<select id="shengServiceMap" resultType="java.util.Map">
+select sum(d.sync_num)as sync_num,d.service,replace(d.city,'省直','省本级')as city from (
+select sum(s.sync_num) as sync_num,b.service,max(b.city)as city from sync_current_day_info s,(select cid,c.service,c.city from codestring c,(
+        select i.cid,i.target_nick from chnl_info_state i, node_info n where i.chnl_name=n.node_name)a
+        where c.commonname=a.target_nick)b
+        where s.node_id=b.cid
+        and s.sync_date=#{date_time}
+        group by b.service
+UNION all
+select s.sync_num,c.service,s.city from codestring c,city_service_num_today s
+where c.city_service_code=s.service_code
+and s.synctime=#{date_time}
+)d
+group by d.service,d.city
+	</select>
+
+	<select id="listCity" resultType="java.util.Map">
+		select * from city_info
+	</select>
+	<select id="selectCityGaojingCount" resultType="java.lang.Long">
+select sum(if(laststatus='ABENDED',1,0))as state from codestring c RIGHT JOIN aconprocsb a on a.commonname=c.commonname
+where a.processname=c.city_service_code
+and  a.commonname in(select DISTINCT commonname  from codestring  where CONCAT(city,'市')=#{city} and service=#{service})
+	</select>
+	<select id="selectSxGaojingCount" resultType="java.lang.Long">
+select count(b.service) from (select n.* from alarm_report_msg LEFT JOIN node_info n on chnl_name=n.node_alias where ex_status=0)s,(select cid,c.service,c.city from codestring c,(
+        select i.cid,i.target_nick from chnl_info_state i, node_info n where i.chnl_name=n.node_name)a
+        where c.commonname=a.target_nick)b
+        where s.node_id=b.cid and b.service=#{service}
+     group by b.service
+	</select>
+	<select id="selectCityDayChangeList" resultType="java.util.Map">
+        SELECT
+	c.city,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 6 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day1,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 5 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day2,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 4 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day3,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 3 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day4,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 2 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day5,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 1 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day6,
+	IFNULL(
+		(
+			SELECT
+				t.sync_num
+			FROM
+				city_sync_num t
+			WHERE
+				t.city = c.city
+			AND t.synctime = DATE_FORMAT(
+				DATE_SUB(NOW(), INTERVAL 0 DAY),
+				'%Y-%m-%d'
+			)
+			AND t.istoday = 1
+		),
+		0
+	) day7
+FROM
+	city_info c where c.city=#{city}
+ORDER BY
+	orders
+    </select>
+</mapper>

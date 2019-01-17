@@ -1,0 +1,70 @@
+<!-- sidebar: style can be found in sidebar.less -->
+<section class="sidebar">
+
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel">
+        <div class="pull-left image">
+            <img src="{{user.avatar}}" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+            <p>{{user.username}}</p>
+        </div>
+    </div>
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu">
+        <li class="header">{{'SIDEBAR.MENU'|translate}}</li>
+        <!-- DashBoard -->
+        <li class="treeview" ui-sref-active="active">
+            <a>
+                <i class="fa fa-th"></i>
+                <span>{{'SIDEBAR.C_DASHBOARD'|translate}}</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            </a>
+            <ul class="treeview-menu">
+                <li ui-sref-active="active" ng-repeat="c in categoryList | hasBoards : boardList">
+                    <a>
+                        <i class="fa fa-folder"></i>
+                            {{c.name}}
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li ui-sref-active="active" ng-repeat="b in boardList | filter:{categoryId:c.id}:true">
+                            <a ui-sref="dashboard.category.view({id:b.id,category:c.name})"><i class="fa fa-dashboard"></i>{{b.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="treeview" ui-sref-active="active">
+            <a>
+                <i class="fa fa-th"></i>
+                <span>{{'SIDEBAR.MY_DASHBOARD'|translate}}</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            </a>
+            <ul class="treeview-menu">
+                <li ui-sref-active="active" ng-repeat="b in boardList | filter:{userId:user.userId}:true">
+                    <a ui-sref="mine.view({id:b.id})"><i class="fa fa-dashboard"></i>{{b.name}}</a>
+                </li>
+            </ul>
+        </li>
+        <!-- Config -->
+        <li class="treeview" ui-sref-active="active" ng-if="isParent(menu)" ng-repeat="menu in menuList">
+            <a>
+                <i></i>
+                <span>{{menu.menuName|translate}}</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li ui-sref-active="active" ng-if="isSon(menu,sonMenu)" ng-repeat="sonMenu in menuList">
+                    <a ui-sref="{{sonMenu.menuCode}}"><i></i>{{sonMenu.menuName|translate}}</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <!-- /.sidebar-menu -->
+</section>
+<!-- /.sidebar -->

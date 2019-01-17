@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.TableChannelCountDao">
+    <select id="selectByTableName" resultType="org.taiji.rst.pojo.TableChannelCount">
+        select * from table_channel_count where table_name =#{arg0}
+    </select>
+    <select id="selectTableChangeList" resultType="java.util.Map">
+       select a.* from  (select *from (
+select table_name,(tar_ddl_num+tar_delete_num+tar_insert_num+tar_update_num) tar_ddl_num  from table_channel_count ) c
+UNION all
+select * from(select table_name,(tar_delete_num+tar_insert_num+tar_update_num )as tar_ddl_num
+from table_oracle_count)c)a
+ORDER BY a.tar_ddl_num desc
+    </select>
+    <select id="table_change" resultType="java.util.Map">
+        <if test="city=='省本级'">
+            select sum(tar_insert_num)as tar_insert_num,
+            sum(tar_update_num)as tar_update_num,
+            sum((tar_delete_num+tar_ddl_num))as tar_delete_num from table_channel_count
+        </if>
+        <if test="city!='省本级'">
+            select sum(tar_insert_num)as tar_insert_num,
+            sum(tar_update_num)as tar_update_num,
+            sum(tar_delete_num)as tar_delete_num
+            from table_oracle_count t,codestring c where c.city_service_code=t.er_name
+            and CONCAT(c.city,'市')=#{city}
+        </if>
+    </select>
+
+    <select id="selectCityTableChangeList" resultType="java.util.Map">
+        <if test="city=='省本级'">
+            select table_name,(tar_ddl_num+tar_delete_num+tar_insert_num+tar_update_num) tar_ddl_num  from table_channel_count ORDER BY tar_ddl_num DESC
+        </if>
+        <if test="city!='省本级'">
+            select table_name,(tar_delete_num+tar_insert_num+tar_update_num )as tar_ddl_num from city_info t,codestring c,table_oracle_count o where t.city_code=c.city and c.city_service_code=o.er_name and t.city=#{city} order by tar_ddl_num DESC
+        </if>
+    </select>
+</mapper>

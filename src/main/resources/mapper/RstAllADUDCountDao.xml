@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.RstAllADUDCountDao">
+    <select id="selectByType" resultType="org.taiji.rst.pojo.SyncTotal">
+        select * from rst_sync_total where type=#{arg0}
+    </select>
+    <select id="selectByTypeDateTime" resultType="java.lang.Long">
+       select sum(sync_num) from city_sync_num where istoday=#{arg0} and synctime=#{arg1}
+    </select>
+
+</mapper>

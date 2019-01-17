@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.AconprocsbServiceDao">
+    <select id="selectByUriString" resultType="org.taiji.rst.pojo.Aconprocsb">
+        select * from ACONPROCSB where uristring=#{uristring}
+    </select>
+    <select id="selectByGaojing" resultType="java.util.Map">
+       SELECT
+	URISTRING,
+	COMMONNAME,
+	PROCESSNAME,
+	PROCESSTYPE,
+	TASKTYPE,
+	TASKDESC,
+	LASTSTATUS,
+	TO_CHAR (
+		AGENTTIMESTAMP,
+		'yyyy-mm-dd hh24:mi:ss.ff'
+	) AS AGENTTIMESTAMP,
+	TO_CHAR (
+		STATUSTIMESTAMP,
+		'yyyy-mm-dd hh24:mi:ss.ff'
+	) AS STATUSTIMESTAMP,
+	TO_CHAR (
+		LASTRECORDTIME,
+		'yyyy-mm-dd hh24:mi:ss.ff'
+	) AS LASTRECORDTIME,
+	LASTCHECKPOINTLAG,
+	DATASOURCE,
+	DATASOURCETYPE,
+	PARAMFILE,
+	TANDEMCPU,
+	TANDEMPRIORITY,
+	TANDEMPROCESS
+FROM
+	ACONPROCSB
+    </select>
+</mapper>

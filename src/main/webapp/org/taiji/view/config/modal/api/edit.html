@@ -1,0 +1,89 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title">接口管理</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">系统名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="api.sysName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">接口名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="api.apiName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">接口地址</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="api.apiUrl">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">请求类型</label>
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="api.apiType" ng-options="v.type as v.name for v in $parent.apiType">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">接口类型</label>
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="api.apiMode" ng-options="v.type as v.name for v in $parent.apiMode">
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="selectChange()">
+            <label class="col-sm-2 control-label">用户名称</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="api.apiAccouts">
+            </div>
+        </div>
+        <div class="form-group" ng-if="selectChange()">
+            <label class="col-sm-2 control-label">密码</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="api.apiPassword">
+            </div>
+        </div>
+        <div class="form-group" ng-if="selectChange()">
+            <label class="col-sm-2 control-label">命名空间</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="api.apiQname">
+            </div>
+        </div>
+        <div class="form-group" ng-if="selectChange()">
+            <label class="col-sm-2 control-label">方法</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="api.apiWsmethod">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">接口参数</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="api.apiParams" >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">接口调用次数</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="api.apiNum" readonly="true" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">接口调用频率</label>
+            <cron-selection ng-model="api.cronExp" config="cronConfig"
+                            template="org/taiji/view/config/modal/api/cronselection.html"></cron-selection>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default pull-left" data-dismiss="modal" ng-click="close()">
+        {{'COMMON.CANCEL'|translate}}
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="ok()">{{'COMMON.OK'|translate}}</button>
+</div>

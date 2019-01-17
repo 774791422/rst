@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.ChannelServiceDao">
+    <select id="selectByCid" resultType="org.taiji.rst.pojo.Channel_info">
+        select * from chnl_info_state where cid=#{arg0}
+    </select>
+    <select id="selectZc_channel" resultType="java.lang.Long">
+        select count(*) from chnl_info_state where
+        <if test="i==0">
+            dest_proc_status  in (6,7,8)
+        </if>
+        <if test="i==1">
+            src_proc_status  in (6,7,8)
+        </if>
+    </select>
+
+    <select id="selectChannel" resultType="java.lang.Long">
+        select count(*) from chnl_info_state where
+        <if test="i==0">
+            src_nick is not null or src_nick!=''
+        </if>
+        <if test="i==1">
+            target_nick is not null or target_nick!=''
+        </if>
+    </select>
+    <select id="oracle_zc" resultType="java.lang.Long">
+        select count(*) from codestring c RIGHT  JOIN aconprocsb a on c.city_service_code=a.processname
+        where c.commonname=a.commonname and a.laststatus='RUNNING';
+    </select>
+    <select id="oracle_all" resultType="java.lang.Long">
+        select count(*) from codestring where city&lt;&gt;'省直'
+    </select>
+
+    <select id="selectCityChannel" resultType="org.taiji.rst.pojo.Channel_info">
+        select * from chnl_info_state where
+        <if test="i==0">
+            src_nick is not null or src_nick!=''
+        </if>
+        <if test="i==1">
+            target_nick is not null or target_nick!=''
+        </if>
+    </select>
+    <select id="zcOracleCity" resultType="java.lang.Long">
+        select count(*) from codestring c,aconprocsb a,city_info t  where c.city_service_code=a.processname and c.city=t.city_code
+        and c.commonname=a.commonname and a.laststatus='RUNNING' and t.city=#{city};
+    </select>
+    <select id="allOracleCity" resultType="java.lang.Long">
+        select count(*) from codestring c,aconprocsb a,city_info t  where c.city_service_code=a.processname and c.city=t.city_code
+        and c.commonname=a.commonname and t.city=#{city};
+    </select>
+</mapper>

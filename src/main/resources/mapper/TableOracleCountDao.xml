@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.TableOracleCountDao">
+<select id="selectOracleTable" resultType="java.util.Map">
+select s.er_name,s.tb_name,s.op_tm,s.TB_INSERT,
+(to_number(s.TB_DELETE)+to_number(s.TRUNCATES))as tb_delete,
+(to_number(s.TB_UPDATE)+to_number(s.ENSCRIBE_COMPUPDATE)+to_number(SQLCOMPUPDATE)+to_number(PKUPDATE))as tb_update
+from
+(select t.ER_NAME,t.TB_NAME,
+max(substr(to_char(t.op_tm,'yyyy-mm-dd hh24:mi:ss'),0,10))as op_tm,
+sum(case t.OP_TYPE when 'INSERT' then 1 else 0 end )as TB_INSERT,
+sum(case t.OP_TYPE when 'UPDATE' then 1 else 0 end )as TB_UPDATE,
+sum(case t.OP_TYPE when 'DELETE' then 1 else 0 end )as TB_DELETE,
+sum(case t.OP_TYPE when 'ENSCRIBE COMPUPDATE' then 1 else 0 end )as ENSCRIBE_COMPUPDATE,
+sum(case t.OP_TYPE when 'SQL COMPUPDATE' then 1 else 0 end )as SQLCOMPUPDATE,
+sum(case t.OP_TYPE when 'PK UPDATE' then 1 else 0 end )as PKUPDATE,
+sum(case t.OP_TYPE when 'TRUNCATE' then 1 else 0 end )as TRUNCATES
+from
+GG_TB_STAT t
+group by t.ER_NAME,t.TB_NAME)s
+    </select>
+
+    <select id="selectByOracleTableOne" resultType="org.taiji.rst.pojo.TableOracleCount">
+        select *from table_oracle_count where table_name=#{arg0}
+    </select>
+</mapper>

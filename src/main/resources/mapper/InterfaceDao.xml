@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.InterfaceDao">
+    <update id="updateExec" parameterType="org.taiji.pojo.DashboardInterface">
+        <![CDATA[
+                UPDATE dashboard_interface
+                   SET  api_num=#{apiNum},
+                   last_exec_time=#{lastExecTime},
+                   api_state=#{apiState},
+                   api_num=#{apiNum},
+                   api_status=#{apiStatus}
+                     WHERE api_id = #{id}
+        ]]>
+    </update>
+
+
+    <select id="getInterfaceList" resultType="org.taiji.pojo.DashboardInterface">
+      SELECT
+               j.api_id         AS id,
+               j.user_id        AS userId,
+               j.sys_name       as sysName,
+               j.api_name       AS apiName,
+               j.api_num        AS apiNum,
+               j.api_url        AS apiUrl,
+               j.start_date     AS startDate,
+               j.end_date       AS endDate,
+               j.api_type       AS apiType,
+               j.api_mode       AS apiMode,
+               j.api_password   AS apiPassword,
+               j.api_accouts     AS apiAccouts,
+               j.api_qname      AS apiQname,
+               j.api_params     AS apiParams,
+               j.api_wsmethod   AS apiWsmethod,
+               j.cron_exp       AS cronExp,
+               j.api_state      AS apiState,
+               j.last_exec_time AS lastExecTime,
+               (select u.user_name from dashboard_user u where u.user_id = j.user_id) as userName,
+               j.api_status AS apiStatus
+          FROM dashboard_interface j
+         WHERE #{arg0} = '${admin_user_id}' OR j.user_id = #{arg0}
+               OR j.api_id IN (
+                  SELECT res_id
+                    FROM dashboard_user_role ur
+                    LEFT JOIN dashboard_role_res rr ON ur.role_id = rr.role_id
+                   WHERE ur.user_id = #{arg0} AND rr.res_type = 'api'
+               )
+        ORDER BY j.api_id DESC
+    </select>
+
+    <select id="findApiList" resultType="org.taiji.pojo.DashboardInterface">
+      SELECT
+               j.api_id         AS id,
+               j.user_id        AS userId,
+               j.sys_name       as sysName,
+               j.api_name       AS apiName,
+               j.api_num        AS apiNum,
+               j.api_url        AS apiUrl,
+               j.start_date     AS startDate,
+               j.end_date       AS endDate,
+               j.api_type       AS apiType,
+               j.api_mode       AS apiMode,
+               j.api_password   AS apiPassword,
+               j.api_accouts     AS apiAccouts,
+               j.api_qname      AS apiQname,
+               j.api_params     AS apiParams,
+               j.api_wsmethod   AS apiWsmethod,
+               j.cron_exp       AS cronExp,
+               j.api_state      AS apiState,
+               j.last_exec_time AS lastExecTime,
+               (select u.user_name from dashboard_user u where u.user_id = j.user_id) as userName,
+               j.api_status AS apiStatus
+          FROM dashboard_interface j
+
+    </select>
+
+     <select id="getDatasourceList" resultType="org.taiji.pojo.DashboardInterface">
+         SELECT
+               j.api_id         AS id,
+               j.user_id        AS userId,
+               j.sys_name       as sysName,
+               j.api_name       AS apiName,
+               j.api_url        AS apiUrl,
+               j.start_date     AS startDate,
+               j.end_date       AS endDate,
+               j.api_type       AS apiType,
+               j.api_mode       AS apiMode,
+               j.cron_exp       AS cronExp,
+               j.api_state      AS apiState,
+               j.last_exec_time AS lastExecTime,
+               (select u.user_name from dashboard_user u where u.user_id = j.user_id) as userName,
+               j.api_status AS apiStatus
+          FROM dashboard_interface j
+         WHERE  j.api_status=1
+        ORDER BY j.api_id DESC
+    </select>
+
+    <select id="checkDatasourceRole" resultType="java.lang.Long">
+        SELECT count(1) FROM dashboard_interface WHERE api_id = #{arg1} and (#{arg0} = '${admin_user_id}' OR user_id = #{arg0} OR api_id IN (SELECT res_id FROM dashboard_user_role ur LEFT JOIN dashboard_role_res rr ON ur.role_id = rr.role_id WHERE ur.user_id = #{arg0} AND rr.res_type = 'datasource' AND rr.permission LIKE #{arg2}))
+    </select>
+</mapper>

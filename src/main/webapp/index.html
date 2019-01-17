@@ -1,0 +1,349 @@
+<!DOCTYpE html>
+<html ng-app="rstApp" ng-controller="rstAppCtrl">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=10" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/rst/css/public.css" />
+		<title></title>
+	</head>
+
+	<body class="bg">
+		<div class="g-doc">
+			<img src="/plugins/rst/image/logo.png" class="logo"/>
+		    <div class="main">
+		    	<div class="lf-cont">
+		    		<div class="lf-cont-box">
+		    			<div class="over">
+							<div class="lf-toplf">
+			    				<div class="i-title">
+			    					<span class="tit-icon1"></span>
+			    					<div>
+			    						<p>今日同步量</p>
+			    						<span>{{dw(sync_day.syncNum)}}</span>
+			    					</div>
+			    					<span class="tit-icon2"></span>
+			    				</div>
+			    				<div class="lf-cont-tpnum">
+			    					<img src="/plugins/rst/image/lf-icon1.png" class="icon"/>
+			    					<p>{{RemoveChinese(sync_day.syncNumstr)}}</p>
+			    					<span>{{GetChinese(sync_day.syncNumstr)}}</span>
+			    					<!--背景动画-->
+			    					<div class="bgdh">
+			    						<div class="bgdh1"></div>
+			    					</div>
+			    				</div>
+			    			</div>
+			    			<div class="lf-toplf mg-l6">
+			    				<div class="i-title">
+			    					<span class="tit-icon1"></span>
+			    					<div>
+			    						<p>累计同步量</p>
+			    						<span>{{dw(sync_lj.syncNum)}}</span>
+			    					</div>
+			    					<span class="tit-icon2"></span>
+			    				</div>
+			    				<div class="lf-cont-tpnum">
+			    					<img src="/plugins/rst/image/lf-icon2.png" class="icon"/>
+									<p>{{RemoveChinese(sync_lj.syncNumstr)}}</p>
+									<span>{{GetChinese(sync_lj.syncNumstr)}}</span>
+			    					<!--背景动画-->
+			    					<div class="bgdh">
+			    						<div class="bgdh1"></div>
+			    					</div>
+			    				</div>
+			    			</div>
+		    			</div>
+
+		    			<div class="lf-cont-btlf">
+		    				<div class="over">
+		    					<div class="bl-tit">
+			    					同步成功率
+			    					<span class="bl-number" id="tbl">{{tbl_}}%</span>
+			    				</div>
+			    				<div class="bljd">
+									<div class="prinner-zh" id="tbl_line" >
+										<span class="progress" id="stbl_line" ></span>
+									</div>
+								</div>
+		    				</div>
+
+		    				<div class="">
+		    					<div class="boxbg mg-t8">
+		    						<div class="box-tit">
+		    							<span class="tit-icon1 mg-r2"></span>
+										同步数量业务排行
+		    						</div>
+		    						<div class="mg-t7" >
+		    							<div class="pritem ">
+				    						<div class="over">
+				    							<p class="ph-name">1.{{sync_services[0].name}}</p>
+				    							<p class="ph-num">{{sync_services[0].sync_num}}</p>
+				    						</div>
+											<div class="prouter">
+												<div class="prinner" id="sync_services0_bl" >
+													<span class="progress" id="span0_bl"></span>
+												</div>
+											</div>
+										</div>
+										<div class="pritem mg-t7">
+				    						<div class="over">
+				    							<p class="ph-name">2.{{sync_services[1].name}}</p>
+				    							<p class="ph-num">{{sync_services[1].sync_num}}</p>
+				    						</div>
+											<div class="prouter">
+												<div class="prinner" id="sync_services1_bl" >
+													<span class="progress" id="span1_bl"></span>
+												</div>
+											</div>
+										</div>
+										<div class="pritem mg-t7">
+				    						<div class="over">
+				    							<p class="ph-name">3.{{sync_services[2].name}}</p>
+				    							<p class="ph-num">{{sync_services[2].sync_num}}</p>
+				    						</div>
+											<div class="prouter">
+												<div class="prinner" id="sync_services2_bl" >
+													<span class="progress" id="span2_bl"></span>
+												</div>
+											</div>
+										</div>
+										<div class="pritem mg-t7">
+				    						<div class="over">
+				    							<p class="ph-name">4.{{sync_services[3].name}}</p>
+				    							<p class="ph-num">{{sync_services[3].sync_num}}</p>
+				    						</div>
+											<div class="prouter">
+												<div class="prinner" id="sync_services3_bl" >
+													<span class="progress" id="span3_bl"></span>
+												</div>
+											</div>
+										</div>
+		    						</div>
+		    					</div>
+		    				</div>
+		    			</div>
+		    		</div>
+
+		    		<div class="lf-cont-boxrt mg-l8">
+		    			<div class="boxbg mg-t6">
+		    				<div class="box-tit">
+    							<span class="tit-icon1 mg-r2"></span>
+    							今日同步数据量
+    						</div>
+    						<div class="mg-t2" id="today" style="width: 650px;height: 400px">
+
+    						</div>
+		    			</div>
+		    			<div class="boxbg" style="margin-top: 50px;">
+		    				<div class="box-tit">
+    							<span class="tit-icon1 mg-r2"></span>
+								累计同步数据量
+    						</div>
+							<div class="mg-t2" id="lj" style="width: 650px;height: 400px">
+
+							</div>
+		    			</div>
+		    		</div>
+
+		    	</div>
+		    	<div class="ct-cont">
+					<div class="ct-num">
+						<div class="ct-numbox">
+							<p>全省业务总量</p>
+							<span class="counter">{{sers}}</span>
+						</div>
+						<div class="ct-numbox">
+							<p>安全运行天数</p>
+							<span class="counter">{{run_day}}</span>
+						</div>
+						<div class="ct-numbox">
+							<p>健康状态</p>
+							<span class="text">健康</span>
+						</div>
+					</div>
+					<div class="ct-bt-cont">
+						<div class="map-city">
+							<div id="map" style="height:824px;"></div>
+						</div>
+						<div class="smallmap">
+							<div class="map-data">
+								<div class="map-data-tit">
+									<span>省本级</span>
+									<br>
+									<span id="sheng_services"></span>
+								</div>
+							</div>
+							<div class="maptable" style="padding-top:240px;">
+								<div class="scrol">
+									<table>
+										<tr>
+											<th>业务</th>
+											<th>今日同步量</th>
+										</tr>
+										<tbody  id="sev_table">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+		    	</div>
+		    	<div class="rt-cont">
+		    		<div class="lf-cont-boxrt">
+		    			<div class="boxbg2 mg-t6">
+		    				<div class="box-tit">
+    							<span class="tit-icon1 mg-r2"></span>
+    							近七日各地市数据同步量
+    						</div>
+    						<div class="mg-t2">
+								<div id="dayChange" style="height:353px;"></div>
+    						</div>
+		    			</div>
+		    			<div class="boxbg2" style="margin-top: 50px;">
+		    				<div class="box-tit">
+    							<span class="tit-icon1 mg-r2"></span>
+    							表变化统计排行
+    						</div>
+    						<div class="mg-t4">
+								<div id="tableChange" style="height:353px;"></div>
+    						</div>
+		    			</div>
+		    		</div>
+					<div class="lf-cont-box mg-l8">
+		    			<div class="boxbg4 mg-t6">
+		    				<div class="box-tit">
+    							<span class="tit-icon1 mg-r2"></span>
+    							告警信息
+    						</div>
+    						<div class="mg-t2">
+								<ul class="rt-list" ng-if="isList">
+									<li >
+										<div class="litxt">
+											所有告警都已经处理完毕
+										</div>
+									</li>
+								</ul>
+    							<ul class="rt-list" ng-if="!isList">
+    								<li ng-repeat="gjxx in gjxxList">
+    									<span class="litit">{{gjxx.deviceName|limitTo:4}}</span>
+    									<div class="litxt">
+											{{gjxx.exMsg|limitTo:33}}
+    									</div>
+    									<span class="lidate">{{gjxx.recTime|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+    								</li>
+    							</ul>
+    						</div>
+		    			</div>
+		    			<div class="boxbg3" style="margin-top: 50px;">
+		    				<div class="box-tit">
+    							<span class="tit-icon1 mg-r2"></span>
+    							目标端CPU/内存/存储监控情况
+    						</div>
+    						<div class="mg-t4">
+    							
+    							<div class="ybp">
+    								<div class="ybpbox">
+										<span class="zhizhen"></span>
+										<span class="num">{{host.cpuRate}}%</span>
+									</div>
+									<div class="ybp-number">
+										<p>CPU</p>
+										<span>{{host.ip}}</span>
+										<div class="ybpbg"></div>
+									</div>
+									<!--<div class="mg-l1">-->
+										<!--<div class="blue-txt mg-t2 over">-->
+											<!--<span class="dot1"></span>-->
+											<!--<p>盘符总量：98.31</p>-->
+										<!--</div>-->
+										<!--<div class="lightblue-txt mg-t2 over">-->
+											<!--<span class="dot2"></span>-->
+											<!--<p>未使用量：91.73</p>-->
+										<!--</div>-->
+										<!--<div class="red-txt mg-t2 over">-->
+											<!--<span class="dot3"></span>-->
+											<!--<p>已使用量：6.58</p>-->
+										<!--</div>-->
+									<!--</div>-->
+    							</div>
+    							
+    							<div class="ybp mg-l7" >
+									<div class="ybpbox">
+										<span class="zhizhen"></span>
+										<span class="num">{{host.diskRate}}%</span>
+									</div>
+									<div class="ybp-number">
+										<p>磁盘</p>
+										<span>{{host.ip}}</span>
+										<div class="ybpbg"></div>
+									</div>
+									<!--<div class="mg-l1">-->
+									<!--<div class="blue-txt mg-t2 over">-->
+									<!--<span class="dot1"></span>-->
+									<!--<p>盘符总量：98.31{{qwerty}}</p>-->
+									<!--</div>-->
+									<!--<div class="lightblue-txt mg-t2 over">-->
+									<!--<span class="dot2"></span>-->
+									<!--<p>未使用量：91.73</p>-->
+									<!--</div>-->
+									<!--<div class="red-txt mg-t2 over">-->
+									<!--<span class="dot3"></span>-->
+									<!--<p>已使用量：6.58</p>-->
+									<!--</div>-->
+									<!--</div>-->
+    							</div>
+    							
+    							<div class="ybp mg-l7">
+									<div class="ybpbox">
+										<span class="zhizhen"></span>
+										<span class="num">{{host.memRate}}%</span>
+									</div>
+									<div class="ybp-number">
+										<p>内存 </p>
+										<span>{{host.ip}}</span>
+										<div class="ybpbg"></div>
+									</div>
+									<!--<div class="mg-l1">-->
+									<!--<div class="blue-txt mg-t2 over">-->
+									<!--<span class="dot1"></span>-->
+									<!--<p>盘符总量：98.31</p>-->
+									<!--</div>-->
+									<!--<div class="lightblue-txt mg-t2 over">-->
+									<!--<span class="dot2"></span>-->
+									<!--<p>未使用量：91.73</p>-->
+									<!--</div>-->
+									<!--<div class="red-txt mg-t2 over">-->
+									<!--<span class="dot3"></span>-->
+									<!--<p>已使用量：6.58</p>-->
+									<!--</div>-->
+									<!--</div>-->
+
+    							</div>
+    							
+    						</div>
+		    			</div>
+		    		</div>
+		    	</div>
+		    </div>
+
+		</div>	
+
+	<script src="/plugins/rst/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/plugins/rst/js/jquery.AshAlom.gaugeMeter-2.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/plugins/echart/echarts-3.6.2.min.js"></script>
+	<script src="/plugins/echart/map/js/province/shanxi.js"></script>
+	<script src="/lib/angular.min.js"></script>
+	<link href="/lib/ionic.css" rel="stylesheet">
+	<script src="/lib/ionic.bundle.min.js"></script>
+	<script src="/plugins/rst/js/rstCtrl.js"></script>
+	<script type="text/javascript">
+		$(".GaugeMeter").gaugeMeter();
+
+
+	</script>
+	</body>
+
+</html>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.ServiceNumDao">
+    <select id="selectByService" resultType="java.util.Map">
+        select sum(s.sync_num) as sync_num ,concat(b.city,b.service)as service from sync_current_day_info s,(
+				select cid,REPLACE(c.city,'省直','省本级')as city, c.service from codestring c,(
+        select i.cid,i.target_nick from chnl_info_state i, node_info n where i.chnl_name=n.node_name)a
+        where c.commonname=a.target_nick)b
+        where s.node_id=b.cid
+        and s.sync_date=#{datetime}
+        group by b.service,b.city
+        UNION all
+        select sync_num,concat(s.city,c.service)as service from codestring c RIGHT JOIN city_service_num_today s on s.service_code=c.city_service_code
+         where s.synctime=#{datetime}
+    </select>
+    <select id="selectByCity" resultType="java.util.Map">
+        select
+            sum(if(city='省本级',sync_num,0)) AS '省本级',
+            sum(if(city='太原市',sync_num,0)) AS '太原市',
+            sum(if(city='大同市',sync_num,0)) AS '大同市',
+            sum(if(city='朔州市',sync_num,0)) AS '朔州市',
+            sum(if(city='忻州市',sync_num,0)) AS '忻州市',
+            sum(if(city='阳泉市',sync_num,0)) AS '阳泉市',
+            sum(if(city='吕梁市',sync_num,0)) AS '吕梁市',
+            sum(if(city='晋中市',sync_num,0)) AS '晋中市',
+            sum(if(city='长治市',sync_num,0)) AS '长治市',
+            sum(if(city='晋城市',sync_num,0)) AS '晋城市',
+            sum(if(city='临汾市',sync_num,0)) AS '临汾市',
+            sum(if(city='运城市',sync_num,0)) AS '运城市'
+            from city_sync_num
+            where synctime=#{datetime} and istoday=#{istoday}
+            group by synctime
+    </select>
+
+    <select id="selectNodeInfo_oracle" resultType="java.util.Map">
+        select * from NODE_INFO
+    </select>
+    <select id="selectChs_num_oracle" resultType="java.util.Map">
+        select * from CSH_NUM
+    </select>
+    <select id="selectCODESTRING_oracle" resultType="java.util.Map">
+        select * from CODESTRING
+    </select>
+    <select id="selectByServiceCode" resultType="java.util.Map">
+        select * from codestring where city_service_code=#{city_service_code}
+    </select>
+    <select id="selectByNodeName" resultType="java.util.Map">
+        select n.*,s.cid from node_info n ,chnl_info_state s where
+        s.chnl_name=n.node_name
+         and s.chnl_name=#{node_name}
+    </select>
+
+    <select id="selectSyncToDayOracle" resultType="java.util.Map">
+        select count(*)num,ER_NAME from GG_TB_STAT
+        where substr(to_char(OP_TM,'yyyy-mm-dd hh24:mi:ss'),0,10)=#{date_time}
+        group by ER_NAME
+    </select>
+    <select id="selectCity" resultType="java.util.Map">
+        select city,service from codestring where city_service_code=#{code}
+    </select>
+    <select id="selectCityToDay" resultType="java.util.Map">
+        select * FROM city_sync_num where city=#{code} and istoday=#{type} and synctime=#{date_time}
+    </select>
+
+    <select id="selectCityCount" resultType="java.math.BigDecimal">
+       select count(*) from city_sync_num where city=#{city} and istoday=0
+    </select>
+    <select id="selectCityNum" resultType="java.lang.Long">
+       select sync_num from city_sync_num where city=#{city} and istoday=0 and synctime=#{date_time}
+    </select>
+    <select id="selectCityLj" resultType="java.util.Map">
+      select
+      sum(if(CONCAT(city,'市')='太原市',csh_num,0)) AS '太原市',
+                sum(if(CONCAT(city,'市')='大同市',csh_num,0)) AS '大同市',
+                sum(if(CONCAT(city,'市')='朔州市',csh_num,0)) AS '朔州市',
+                sum(if(CONCAT(city,'市')='忻州市',csh_num,0)) AS '忻州市',
+                sum(if(CONCAT(city,'市')='阳泉市',csh_num,0)) AS '阳泉市',
+                sum(if(CONCAT(city,'市')='吕梁市',csh_num,0)) AS '吕梁市',
+                sum(if(CONCAT(city,'市')='晋中市',csh_num,0)) AS '晋中市',
+                sum(if(CONCAT(city,'市')='长治市',csh_num,0)) AS '长治市',
+                sum(if(CONCAT(city,'市')='晋城市',csh_num,0)) AS '晋城市',
+                sum(if(CONCAT(city,'市')='临汾市',csh_num,0)) AS '临汾市',
+                sum(if(CONCAT(city,'市')='运城市',csh_num,0)) AS '运城市'
+    from csh_num
+    </select>
+    <select id="selectService" resultType="java.lang.Long">
+        select count(distinct city,service) from codestring  where service&lt;&gt;'target'
+    </select>
+
+    <select id="selectServiceByCity" resultType="java.util.Map">
+        <if test="city=='省本级'">
+            select sum(s.sync_num) as sync_num ,concat(b.city,b.service)as service from sync_current_day_info s,(
+            select cid,t.city, c.service from city_info t,codestring c,(
+            select i.cid,i.target_nick from chnl_info_state i, node_info n where i.chnl_name=n.node_name)a
+            where t.city_code=c.city and c.commonname=a.target_nick)b
+            where s.node_id=b.cid
+            and s.sync_date=DATE_FORMAT(NOW(),'%Y-%m-%d')
+            group by b.service,b.city
+        </if>
+        <if test="city!='省本级'">
+            select sync_num,concat(s.city,c.service)as service from city_info t,codestring c,city_service_num_today s where t.city_code=c.city and  s.service_code=c.city_service_code and t.city=#{city} and s.synctime=DATE_FORMAT(NOW(),'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="selectCityServiceLj" resultType="java.util.Map">
+        <if test="city=='省本级'">
+            select sum(s.sync_num) as sync_num ,concat(b.city,b.service)as service from sync_current_day_info s,(
+            select cid,REPLACE(c.city,'省直','省本级')as city, c.service from codestring c,(
+            select i.cid,i.target_nick from chnl_info_state i, node_info n where i.chnl_name=n.node_name)a
+            where c.commonname=a.target_nick)b
+            where s.node_id=b.cid
+            group by b.service,b.city
+        </if>
+        <if test="city!='省本级'">
+            select sum(sync_num)as sync_num,concat(s.city,c.service)as service from codestring c RIGHT JOIN city_service_num_today s
+            on s.service_code=c.city_service_code
+            where CONCAT(c.city,'市')=#{city}
+            group by concat(s.city,c.service)
+        </if>
+    </select>
+    <select id="selectCityService" resultType="java.lang.Long">
+        select count(distinct t.city,c.service) from city_info t,codestring c where t.city_code=c.city and c.service !='target' and t.city=#{city}
+    </select>
+    <select id="selectCityRunDay" resultType="java.util.Map">
+        select * from city_info where city=#{city}
+    </select>
+    <select id="cityData" resultType="java.lang.Long">
+        select count(*) from codestring c
+        where REPLACE(concat(city,'市'),'省直市','省本级')=#{city}
+    </select>
+</mapper>

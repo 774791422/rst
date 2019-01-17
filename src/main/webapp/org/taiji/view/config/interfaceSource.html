@@ -1,0 +1,56 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">接口管理</h3>
+                    <div class="box-tools">
+                        <i class="fa fa-plus toolbar-icon" ng-click="editApi()" title="新建" style="margin-top: 4px;"></i>
+                        <div class="input-group input-group-sm" style="width: 150px; margin-left: 5px; float: right;">
+                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>系统名称</th>
+                            <th>接口名称</th>
+                            <th>接口url</th>
+                            <th>最后检查时间</th>
+                            <th>接口状态</th>
+                            <th>操作人</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="api in apiList" >
+                            <td>{{api.id}}</td>
+                            <td>{{api.sysName}}</td>
+                            <td>{{api.apiName}}</td>
+                            <td>{{api.apiUrl|textLengthSet:true:35:'...'}}</td>
+                            <td>{{getTime(api.lastExecTime)}}</td>
+                            <td>{{getStatus(api.apiStatus)|translate}}</td>
+                            <td>{{api.userName}}</td>
+                            <td>
+
+                                <i class="fa fa-play toolbar-icon" ng-click="runApi(api,1)" title="启动" ng_if="api.apiState==0"></i>
+                                <i class="fa fa-pause toolbar-icon" ng-click="runApi(api,0)" title="暂停" ng_if="api.apiState==1"></i>&nbsp;&nbsp;
+                                <i class="fa fa-edit toolbar-icon" ng-click="editApi(api)" title="编辑"></i>&nbsp;&nbsp;
+                                <i class="fa fa-trash-o toolbar-icon"  ng-click="deleteApi(api)" title="删除"></i>&nbsp;&nbsp;
+                                <i class="fa fa-bug toolbar-icon"  ng-click="showLog(api)" title="日志"></i>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

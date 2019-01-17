@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.rst.dao.HostServiceDao">
+    <select id="selectByCityCode" resultType="org.taiji.rst.pojo.HostSerivce">
+        select * from codestring where city_service_code=#{city_service_code} and city=#{city} and commonname=#{commonname} and service=#{service}
+    </select>
+    <select id="selectByCityService" resultType="org.taiji.rst.pojo.HostSerivce">
+        select * from codestring where city=#{city} and service=#{service}
+    </select>
+
+
+</mapper>
