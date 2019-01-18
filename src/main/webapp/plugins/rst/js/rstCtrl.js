@@ -677,9 +677,9 @@ rstApp.controller('rstAppCtrl', function ($scope, $http, $interval, $filter,$ion
 
             });
 
-            $http.get("rst/cityInfoMap.do").success(function (response) {
-                dataInfo = response;
-            });
+            // $http.get("rst/cityInfoMap.do").success(function (response) {
+            //     dataInfo = response;
+            // });
         })
     }
         $(".map-data").on({
