@@ -58,16 +58,16 @@ public class RstServiceImpl {
      * 累计同比量
      */
     public void getAllADUCount() {
-        url = url + "/syncInfoReportServer?wsdl";
-        param="{}";
-        String wsmethod = "getAllSyncCount";
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        url = url + "/syncInfoReportServer?wsdl";//DSG 累计同步量接口
+        param="{}";//参数
+        wsmethod = "getAllSyncCount";//方法
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();//线程避免多次调用报错
         Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
-        if (map.get("status").toString().equals("200")) {
-            JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
+        if (map.get("status").toString().equals("200")) {//成功
+            JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());//获取成功后数据
             JSONArray jsonArray= jasonObject.getJSONArray("result");
             Map m = (Map) jsonArray.get(0);
-            insertAllADUDCount(m);
+            insertAllADUDCount(m);//入库方法
             LOG.info("DSG累计同步量完成");
         } else {
             LOG.error(map.get("url").toString());
@@ -80,14 +80,13 @@ public class RstServiceImpl {
      * 今日同步量
      */
     public void syncCurrentDayInfo() {
-        url = url + "/syncInfoReportServer?wsdl";
-        wsmethod = "syncCurrentDayInfo";
+        url = url + "/syncInfoReportServer?wsdl";//DSG 累计同步量接口
+        wsmethod = "syncCurrentDayInfo";//方法
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-//        Thread.currentThread().setContextClassLoader(cl);//调用接口前重置上下文
         Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
         if (map.get("status").toString().equals("200")) {
             JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
-            insertSyncDayInfo(jasonObject);
+            insertSyncDayInfo(jasonObject);//入库今日同步量
             LOG.info("DSG今日同步量完成");
         } else {
             LOG.error(map.get("url").toString());
@@ -100,19 +99,17 @@ public class RstServiceImpl {
      * 告警信息
      */
     public void getAlarmReportMsg() {
-        url = url + "/alarmReportServer?wsdl";
-        wsmethod = "getAlarmReportMsg";
+        url = url + "/alarmReportServer?wsdl";//DSG 告警接口
+        wsmethod = "getAlarmReportMsg";//请求访问
         String startDate = DateUtil.parseDateToStr(new Date(), DateUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS);
-        Date d = DateUtil.addDate(new Date(), 0, 0, -1, 0, 0, 0, 0);
+        Date d = DateUtil.addDate(new Date(), 0, 0, -1, 0, 0, 0, 0);//前一天日期
         String endDate = DateUtil.parseDateToStr(d, DateUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS);
-        String param = "";
         param = "{\"startDate\":\"" + endDate + "\",\"endDate\":\"" + startDate + "\"}";
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-//        Thread.currentThread().setContextClassLoader(cl);//调用接口前重置上下文
         Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
         if (map.get("status").toString().equals("200")) {
             JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
-            insertAlarmReportMsg(jasonObject);
+            insertAlarmReportMsg(jasonObject);//告警循环
             LOG.info("DSG告警信息完成");
         } else {
             LOG.error(map.get("url").toString());
@@ -120,20 +117,57 @@ public class RstServiceImpl {
             LOG.error("告警信息接口异常");
         }
     }
-
+    /**
+     * 通道接口
+     */
+    public void  channel (){
+        url = url + "/channelConfigServer?wsdl";//DSG通道信息接口
+        wsmethod = "list";//方法
+        param="{}";
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
+        if (map.get("status").toString().equals("200")) {
+            JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
+            insertChannel(jasonObject);//通过接口获取的通道数据循环
+            LOG.info("DSG通道接口完成");
+        } else {
+            LOG.error(map.get("url").toString());
+            LOG.error(map.get("error").toString());
+            LOG.error("通道接口接口异常");
+        }
+    }
+    /**
+     * 累计表变化量统计
+     */
+    public void getChannelCount() {
+        url = url + "/channelConfigServer?wsdl";
+        wsmethod = "getChannelCount";
+        param=null;
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
+        if (map.get("status").toString().equals("200")) {
+            JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
+            insertChannelCount(jasonObject);//通过接口获取通道同步量数据循环
+            LOG.info("DSG累计表变化量统计完成");
+        } else {
+            LOG.error(map.get("url").toString());
+            LOG.error(map.get("error").toString());
+            LOG.error("累计表变化量接口异常");
+        }
+    }
     /**
      * oracle 同步mysql
      */
     public void oracle_init_sync(){
-        MultipleDataSource.setDataSourceKey("otherDataSource");
+        MultipleDataSource.setDataSourceKey("otherDataSource");//切换数据源 oracle 数据源
         List list=serviceNumDao.selectNodeInfo_oracle();
         List list1=serviceNumDao.selectChs_num_oracle();
         List list2=serviceNumDao.selectCODESTRING_oracle();
-        MultipleDataSource.setDataSourceKey("masterDataSource");
+        MultipleDataSource.setDataSourceKey("masterDataSource");//切换回默认数据源  mysql 数据源
         node_info(list);//执行2遍 第一遍从orcale取数据
         node_info(list);//第二遍 匹配通道序号
-        host(list2);
-        cshn(list1);
+        host(list2);//从oracle 同步codestring 信息到mysql
+        cshn(list1);//从oracle 同步到csh_num 初始化数据到mysql
         LOG.info("oracle 地市NodeInfo、chs_num、codestring基本信息表同步完成");
 
    }
@@ -143,14 +177,13 @@ public class RstServiceImpl {
     public void oracle_today_sync(){
         MultipleDataSource.setDataSourceKey("otherDataSource");
         String date_time=DateUtil.parseDateToStr(new Date(),DateUtil.DATE_FORMAT_YYYY_MM_DD);
-//        date_time="2018-12-11";
-        List list= serviceNumDao.selectSyncToDayOracle(date_time);
+        List list= serviceNumDao.selectSyncToDayOracle(date_time);//获取当天同步量
         MultipleDataSource.setDataSourceKey("masterDataSource");
         for (int i = 0; i <list.size() ; i++) {
             Map map= (Map) list.get(i);
-            map= MaptoUpperCaseUtils.transformUpperCase(map);
-            String code=map.get("ERNAME").toString();
-            List l=serviceNumDao.selectCity(code);
+            map= MaptoUpperCaseUtils.transformUpperCase(map);//统一将key转换成大小并且"_"去掉
+            String code=map.get("ERNAME").toString();//进程号
+            List l=serviceNumDao.selectCity(code);//通过进程查询地市及业务
             Map m=new HashMap();
             if(l.size()>0) {
                 m=(Map) l.get(0);
@@ -158,8 +191,8 @@ public class RstServiceImpl {
                 if(city.lastIndexOf("市")==-1){
                     city=city+"市";
                 }
-                insertintocity(date_time,city,1,map);
-                insertintocityService(code,date_time,city,map);
+                insertintocity(date_time,city,1,map);//城市同步量入库代码
+                insertintocityService(code,date_time,city,map);//地市业务同步量
             }
         }
         LOG.info("oracle 地市今日同步量完成");
@@ -173,11 +206,15 @@ public class RstServiceImpl {
         List<Map> tables=this.tableOracleCountDao.selectOracleTable();
         for (int i = 0; i < tables.size(); i++) {
             Map m=tables.get(i);
-            insertOracleTable(m);
-        }
+            insertOracleTable(m);//oracle 同步数据表变化
+    }
         LOG.info("oracle 累计表变化完成");
     }
 
+    /**
+     * oracle 同步数据表变化
+     * @param m
+     */
     private void insertOracleTable(Map m) {
         MultipleDataSource.setDataSourceKey("masterDataSource");
         String tableName=m.get("TB_NAME").toString();
@@ -236,11 +273,15 @@ public class RstServiceImpl {
         List list=aconprocsbServiceDao.selectByGaojing();
         for (int i = 0; i <list.size() ; i++) {
             Map m= (Map) list.get(i);
-            insertOracleGaoji(m);
+            insertOracleGaoji(m);//地市oracle告警入库
         }
         LOG.info("oracle 地市告警同步完成");
     }
 
+    /**
+     * 地市oracle告警入库
+     * @param m
+     */
     private void insertOracleGaoji(Map m) {
         m= MaptoUpperCaseUtils.transformUpperCase(m);
         String uristring=m.get("URISTRING").toString();
@@ -295,6 +336,13 @@ public class RstServiceImpl {
       return num;
     }
 
+    /**
+     * 地市业务同步量
+     * @param code
+     * @param date_time
+     * @param city
+     * @param map
+     */
     private void insertintocityService(String code, String date_time, String city, Map map) {
         map= MaptoUpperCaseUtils.transformUpperCase(map);
         List<CitySyncService> citys=citySyncServiceDao.selectCityToDay(code,date_time);
@@ -304,9 +352,6 @@ public class RstServiceImpl {
         citySyncNum.setServiceCode(code);
         citySyncNum.setSyncNum(Long.parseLong(map.get("NUM").toString()));
         if(citys.size()>0){
-            if(citys.size()>1){
-                citySyncServiceDao.delete(citys.get(1));
-            }
             citySyncNum.setId(citys.get(0).getId());
             citySyncServiceDao.updateByPrimaryKey(citySyncNum);
         }else{
@@ -337,10 +382,14 @@ public class RstServiceImpl {
         }
     }
 
+    /**
+     * 从oracle 同步codestring 信息到mysql
+     * @param list2
+     */
     private void host(List list2) {
         for (int i = 0; i < list2.size(); i++) {
             Map map= (Map) list2.get(i);
-            map= MaptoUpperCaseUtils.transformUpperCase(map);
+            map= MaptoUpperCaseUtils.transformUpperCase(map);//统一将key转换成大小并且"_"去掉
             List<HostSerivce> l= hostServiceDao.selectByCityCode(map.get("CITYSERVICECODE").toString(),map.get("CITY").toString(),map.get("COMMONNAME").toString(),map.get("SERVICE").toString());
             HostSerivce host=new  HostSerivce();
             host.setCity(map.get("CITY").toString());
@@ -356,6 +405,10 @@ public class RstServiceImpl {
         }
     }
 
+    /**
+     * cshn_num 从oracle 同步到mysql 中
+     * @param list1
+     */
     public void cshn(List list1){
         for (int i = 0; i < list1.size(); i++) {
             Map map= (Map) list1.get(i);
@@ -374,6 +427,10 @@ public class RstServiceImpl {
         }
     }
 
+    /**
+     * 执行2遍 第一遍从orcale取数据 第二遍通过DSG接口匹配通道id
+     * @param list
+     */
     public void node_info(List list){
         for (int i = 0; i < list.size(); i++) {
             Map map= (Map) list.get(i);
@@ -395,26 +452,11 @@ public class RstServiceImpl {
         }
     }
 
-    /**
-     * 通道接口
-     */
-    public void  channel (){
-        url = url + "/channelConfigServer?wsdl";
-        wsmethod = "list";
-        param="{}";
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
-        if (map.get("status").toString().equals("200")) {
-            JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
-            insertChannel(jasonObject);
-            LOG.info("DSG通道接口完成");
-        } else {
-            LOG.error(map.get("url").toString());
-            LOG.error(map.get("error").toString());
-            LOG.error("通道接口接口异常");
-        }
-    }
 
+    /**
+     * 通过接口获取的通道数据循环
+     * @param jasonObject
+     */
     private void insertChannel(JSONObject jasonObject) {
         JSONArray jasonArray = jasonObject.getJSONArray("result");
         for (int i = 0; i < jasonArray.size(); i++) {
@@ -422,11 +464,15 @@ public class RstServiceImpl {
             JSONArray jsonArray = obj.getJSONArray("rows");
             for (int j = 0; j < jsonArray.size(); j++) {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(j);
-                insertintoChannl(jsonObject);
+                insertintoChannl(jsonObject);//通道基本信息入库
             }
         }
     }
 
+    /**
+     * 通道基本信息入库
+     * @param jsonObject
+     */
     private void insertintoChannl(JSONObject jsonObject) {
         String cid = jsonObject.get("cid").toString();
         List<Channel_info> list = channelServiceDao.selectByCid(cid);
@@ -464,34 +510,23 @@ public class RstServiceImpl {
         }
     }
 
-    /**
-     * 累计表变化量统计
-     */
-    public void getChannelCount() {
-        url = url + "/channelConfigServer?wsdl";
-        wsmethod = "getChannelCount";
-        param=null;
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Map map = HttpWebServiceUtil.invoke(url, userName, password, qname, param, wsmethod,cl);
-        if (map.get("status").toString().equals("200")) {
-            JSONObject jasonObject = JSONObject.parseObject(map.get("result").toString());
-            insertChannelCount(jasonObject);
-            LOG.info("DSG累计表变化量统计完成");
-        } else {
-            LOG.error(map.get("url").toString());
-            LOG.error(map.get("error").toString());
-            LOG.error("累计表变化量接口异常");
-        }
-    }
 
+    /**
+     * 通过接口获取通道同步量数据循环
+     * @param jasonObject
+     */
     private void insertChannelCount(JSONObject jasonObject) {
         JSONArray jasonArray = jasonObject.getJSONArray("result");
         for (int i = 0; i < jasonArray.size(); i++) {
             JSONObject obj = (JSONObject) jasonArray.get(i);
-            insertChannelCountTable(obj);
+            insertChannelCountTable(obj);//通道同步量入库
         }
     }
 
+    /**
+     * 通道同步量入库
+     * @param obj
+     */
     private void insertChannelCountTable(JSONObject obj) {
         String tableName=obj.get("tableName").toString();
         List<TableChannelCount> list = tableChannelCountDao.selectByTableName(tableName);
@@ -514,6 +549,10 @@ public class RstServiceImpl {
 
     }
 
+    /**
+     * 通过接口获取的数据
+     * @param jasonObject
+     */
     private void insertAlarmReportMsg(JSONObject jasonObject) {
         JSONArray jasonArray = jasonObject.getJSONArray("result");
         for (int i = 0; i < jasonArray.size(); i++) {
@@ -521,11 +560,15 @@ public class RstServiceImpl {
             JSONArray jsonArray = obj.getJSONArray("rows");
             for (int j = 0; j < jsonArray.size(); j++) {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(j);
-                insertAlarmMsg(jsonObject);
+                insertAlarmMsg(jsonObject);//告警入库
             }
         }
     }
 
+    /**
+     * 告警入库
+     * @param jsonObject
+     */
     private void insertAlarmMsg(JSONObject jsonObject) {
         String meId = jsonObject.get("meId").toString();
         List<AlarmReportMsg> list = alarmReportMsgDao.selectByMeId(meId);
@@ -547,7 +590,10 @@ public class RstServiceImpl {
         }
     }
 
-
+    /**
+     * 今日同步量
+     * @param jasonObject
+     */
     private void insertSyncDayInfo(JSONObject jasonObject) {
         Long num = 0L;
         JSONArray jasonArray = jasonObject.getJSONArray("result");
@@ -563,7 +609,7 @@ public class RstServiceImpl {
         }
         Map map=new HashMap();
         map.put("NUM",num);
-        insertintocity(DateUtil.parseDateToStr(new Date(),DateUtil.DATE_FORMAT_YYYY_MM_DD),"省本级",1,map);
+        insertintocity(DateUtil.parseDateToStr(new Date(),DateUtil.DATE_FORMAT_YYYY_MM_DD),"省本级",1,map);//入库地市同步量表
         List<SyncTotal> list = rstAllADUDCountDao.selectByType(1);
         SyncTotal total=new SyncTotal();
         total.setType(1);
@@ -578,6 +624,10 @@ public class RstServiceImpl {
 
     }
 
+    /**
+     * 当天同步量入库
+     * @param obj
+     */
     private void insertSyncDayTable(JSONObject obj) {
         String node_id=obj.get("nodeId").toString();
         String date_time=DateUtil.parseDateToStr(new Date(),DateUtil.DATE_FORMAT_YYYY_MM_DD);
@@ -595,7 +645,10 @@ public class RstServiceImpl {
         }
     }
 
-
+    /**
+     * 累计入库
+     * @param m
+     */
     public void insertAllADUDCount(Map m) {
         Map map=new HashMap();
         map.put("NUM",Long.parseLong(m.get("syncNum").toString()));

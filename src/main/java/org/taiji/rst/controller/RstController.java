@@ -55,7 +55,10 @@ public class RstController extends BaseController {
 
     @Autowired
     private SyncCurrentDayInfoDao syncCurrentDayInfoDao;
-
+    /**
+     * 同步率
+     * @return
+     */
     @RequestMapping(value = "/tbl", method = RequestMethod.GET)
     public String tbl() {
         Long zc_src_channel = channelServiceDao.selectZc_channel(0);//迪思杰正常源端通道
@@ -65,8 +68,8 @@ public class RstController extends BaseController {
         Long oracle_zc=channelServiceDao.oracle_zc();//oracle 所有的正常进程
         Long oracle_all=channelServiceDao.oracle_all();//oracle 所有进程
         BigDecimal divide = null;
-        BigDecimal a = new BigDecimal(zc_src_channel + zc_src_channel+oracle_zc);
-        BigDecimal b = new BigDecimal(src_channel + tar_channel+oracle_all);
+        BigDecimal a = new BigDecimal(zc_src_channel + zc_src_channel+oracle_zc);//正常通道及进程
+        BigDecimal b = new BigDecimal(src_channel + tar_channel+oracle_all);//所有通道及进程
         if(b.longValue()!=0){
             divide = a.divide(b, 2, BigDecimal.ROUND_CEILING);
         }else {
@@ -78,9 +81,15 @@ public class RstController extends BaseController {
         return jsonObject.toString();
     }
 
+    /**
+     * 当天同步量
+     * @param type 当天同步1，累计同步0
+     * @param datetime 当天日期
+     * @return
+     */
     @RequestMapping(value = "/sync_num", method = RequestMethod.GET)
     public String sync_num(@RequestParam(name = "type") int type,@RequestParam(name = "datetime")String datetime) {
-        Long l=rstAllADUDCountDao.selectByTypeDateTime(type,datetime);
+        Long l=rstAllADUDCountDao.selectByTypeDateTime(type,datetime);//根据type及city查询同步率
         SyncTotal t=new SyncTotal();
         t.setType(type);
         t.setSyncNum(l);
@@ -90,10 +99,15 @@ public class RstController extends BaseController {
         return jsonObject.toString();
     }
 
+    /**
+     * 地市业务 当天同步量
+     * @param datetime 当天日期
+     * @return
+     */
     @RequestMapping(value = "/service_num", method = RequestMethod.GET)
     public String service_num(@RequestParam(name = "datetime") String datetime) {
         List list = serviceNumDao.selectByService(datetime);
-        list = ListSortMap.sortToMap(list, "sync_num", "asc");
+        list = ListSortMap.sortToMap(list, "sync_num", "asc");//排序  第二个字段 排序列 第三个字段 排序类型
         Long num = 0L;
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < list.size(); i++) {
@@ -104,7 +118,7 @@ public class RstController extends BaseController {
         }
         for (int i = 0; i < list.size(); i++) {
             Map m = (Map) list.get(i);
-            if (i <= 3) {
+            if (i <= 3) {//取前4条
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("sync_num", m.get("sync_num"));
                 jsonObject.put("name", m.get("service"));
@@ -123,6 +137,11 @@ public class RstController extends BaseController {
         return jsonArray.toString();
     }
 
+    /**
+     * 所有地市当天同步量
+     * @param datetime
+     * @return
+     */
     @RequestMapping(value = "/sync_city_today", method = RequestMethod.GET)
     public String sync_city_today(@RequestParam(name = "datetime") String datetime) {
         String[] citys = {"省本级", "太原市", "大同市", "朔州市", "忻州市", "阳泉市", "吕梁市", "晋中市", "长治市", "晋城市", "临汾市", "运城市"};
@@ -140,6 +159,11 @@ public class RstController extends BaseController {
         return jsonObject.toString();
     }
 
+    /**
+     * 所有地市当天累计同步量
+     * @param datetime
+     * @return
+     */
     @RequestMapping(value = "/sync_city_lj", method = RequestMethod.GET)
     public String sync_city_lj(@RequestParam(name = "datetime") String datetime) {
         String[] citys = {"省本级", "太原市", "大同市", "朔州市", "忻州市", "阳泉市", "吕梁市", "晋中市", "长治市", "晋城市", "临汾市", "运城市"};
@@ -149,9 +173,11 @@ public class RstController extends BaseController {
             Map m = (Map) citys_num.get(0);
             for (int i = 0; i < citys.length; i++) {
                 double num=Double.parseDouble( m.get(citys[i]).toString());
-                double newNum = num / 100000000.0;
-                String numStr = String.format("%.2f", newNum);
-                city_nums[i] =numStr;
+                BigDecimal a=new BigDecimal(num);
+                BigDecimal b=new BigDecimal(100000000.0);
+                BigDecimal  divide = a.divide(b, 2, BigDecimal.ROUND_CEILING);
+                BigDecimal setvalue = divide.multiply(new BigDecimal(100));
+                city_nums[i] =setvalue.toString();
             }
         }
         JSONObject jsonObject = new JSONObject();
@@ -160,6 +186,12 @@ public class RstController extends BaseController {
         return jsonObject.toString();
     }
 
+    /**
+     * 定时告警
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @RequestMapping(value = "/listGjxx", method = RequestMethod.POST)
     public PageInfo listGjxx(@RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
                              @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
@@ -169,12 +201,22 @@ public class RstController extends BaseController {
         return page;
     }
 
+    /**
+     * 主机监控情况
+     * @return
+     */
     @RequestMapping(value = "/listJkqk", method = RequestMethod.POST)
     public List listJkqk() {
         List<HostSiteMonitor> jkqkList = this.jkzjDao.selectAll();
         return jkqkList;
     }
 
+    /**
+     * 表排行
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @RequestMapping(value = "/listTableChange", method = RequestMethod.POST)
     public PageInfo listTableChange(@RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
                                     @RequestParam(value = "pageSize", required = false, defaultValue = "7") int pageSize) {
@@ -184,6 +226,10 @@ public class RstController extends BaseController {
         return pageInfo;
     }
 
+    /**
+     * 近7天累加同步量
+     * @return
+     */
     @RequestMapping(value = "/listDayChange", method = RequestMethod.POST)
     public Map listDayChange() {
         Map map = new HashMap();
@@ -194,12 +240,22 @@ public class RstController extends BaseController {
         return map;
     }
 
+    /**
+     * 所有地市同步业务
+     * @return
+     */
     @RequestMapping(value = "/listMap", method = RequestMethod.POST)
     public List listMap() {
         List<Map> mapList = this.syncCurrentDayInfoDao.selectMap();
         return mapList;
     }
 
+    /**
+     * 获取地市业务
+     * @param city
+     * @param datetime
+     * @return
+     */
     @RequestMapping(value = "/cityServiceMap", method = RequestMethod.GET)
     public List cityServiceMap(@RequestParam(value = "city") String city, @RequestParam(value = "datetime") String datetime) {
         List citys = new ArrayList();
@@ -226,6 +282,10 @@ public class RstController extends BaseController {
         return citys;
     }
 
+    /**
+     * 运行天数及当前地市的业务量
+     * @return
+     */
     @RequestMapping(value = "/health", method = RequestMethod.GET)
     public Map health() {
         Long services = this.serviceNumDao.selectService();
@@ -245,18 +305,29 @@ public class RstController extends BaseController {
         m.put("run_day", run_day);
         return m;
     }
-    @RequestMapping(value = "/cityInfoMap", method = RequestMethod.GET)
-    public JSONObject cityInfoMap() {
-        JSONObject jsonObject=new JSONObject();
-        List<Map> maps = this.syncCurrentDayInfoDao.listCity();
-        String day = DateUtil.parseDateToStr(new Date(), "yyyy-MM-dd");
-        for (Map map:maps) {
-            List citys = new ArrayList();
-            citys = this.syncCurrentDayInfoDao.cityServiceMap(day, map.get("city").toString());
-            jsonObject.put(map.get("city").toString(),citys);
-        }
-        return jsonObject;
-    }
+
+//    /**
+//     *
+//     * @return
+//     */
+//    @RequestMapping(value = "/cityInfoMap", method = RequestMethod.GET)
+//    public JSONObject cityInfoMap() {
+//        JSONObject jsonObject=new JSONObject();
+//        List<Map> maps = this.syncCurrentDayInfoDao.listCity();
+//        String day = DateUtil.parseDateToStr(new Date(), "yyyy-MM-dd");
+//        for (Map map:maps) {
+//            List citys = new ArrayList();
+//            citys = this.syncCurrentDayInfoDao.cityServiceMap(day, map.get("city").toString());
+//            jsonObject.put(map.get("city").toString(),citys);
+//        }
+//        return jsonObject;
+//    }
+
+    /**
+     * 根据地市获取所点击地市是否有数据
+     * @param city
+     * @return
+     */
     @RequestMapping(value = "/cityData", method = RequestMethod.GET)
     public Map cityData(@RequestParam(value = "city") String city) {
         Map m=new HashMap();
