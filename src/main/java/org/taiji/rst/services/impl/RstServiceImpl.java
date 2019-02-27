@@ -329,7 +329,7 @@ public class RstServiceImpl {
             Date d=DateUtil.addDate(date,0,0,-1,0,0,0,0);
             String date_time=DateUtil.parseDateToStr(d,DateUtil.DATE_FORMAT_YYYY_MM_DD);
             num=serviceNumDao.selectCityNum(city,date_time);
-            if(num==0){
+            if(num==null||num==0){
                 num=city_num;
             }
         }
@@ -625,7 +625,7 @@ public class RstServiceImpl {
     }
 
     /**
-     * 当天同步量入库
+     * 当天oracle_lj_sync同步量入库
      * @param obj
      */
     private void insertSyncDayTable(JSONObject obj) {
