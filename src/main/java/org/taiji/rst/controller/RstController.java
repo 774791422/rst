@@ -68,7 +68,7 @@ public class RstController extends BaseController {
         Long oracle_zc=channelServiceDao.oracle_zc();//oracle 所有的正常进程
         Long oracle_all=channelServiceDao.oracle_all();//oracle 所有进程
         BigDecimal divide = null;
-        BigDecimal a = new BigDecimal(zc_src_channel + zc_src_channel+oracle_zc);//正常通道及进程
+        BigDecimal a = new BigDecimal(zc_src_channel + zc_tar_channel+oracle_zc);//正常通道及进程
         BigDecimal b = new BigDecimal(src_channel + tar_channel+oracle_all);//所有通道及进程
         if(b.longValue()!=0){
             divide = a.divide(b, 2, BigDecimal.ROUND_CEILING);
