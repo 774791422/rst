@@ -19,7 +19,8 @@
             <value>true</value>
         </property>
     </bean>
-
+    <!--初始化操作的bean 在spring初始化完成的时候执行这个操作 -->
+    <bean class="org.taiji.listener.QuartzJobListener"/>
     <!--<import resource="spring-cacher-redis.xml"/>-->
     <!--初始化操作的bean 在spring初始化完成的时候执行这个操作 -->
     <bean class="org.taiji.listener.QuartzJobListener"/>

@@ -28,8 +28,8 @@ import java.util.Map;
 
 public class JkServiceImpl {
     public Logger LOG = LoggerFactory.getLogger(this.getClass());
-//    String url = "http://59.195.199.190:8080/cloud/h3c/vms/queryVmsPerformance";
-    String url = "http://192.166.11.5/cloud/h3c/vms/queryVmsPerformance";
+//    String url = "http://59.195.199.190:8080/cloud/h3c/vms/queryVmsPerformance";//云监控政务网地址
+    String url = "http://192.166.11.5/cloud/h3c/vms/queryVmsPerformance";//云监控内网地址
     String param = "";
     private JkzjDao jkzjDao;
     private HostServiceDao hostServiceDao;
@@ -41,9 +41,9 @@ public class JkServiceImpl {
         List<HostSerivce> hosts = hostServiceDao.selectAll();
         for (int i = 0; i < hosts.size(); i++) {
             String ip = hosts.get(i).getCommonname();
-            param = "{\"vmsIp\":\"" + ip + "\"}";
+            param = "{\"vmsIp\":\"" + ip + "\"}";//请求参数
             Map m = doHttpsPost(url, param);
-            if (m.get("status").toString().equals("200")) {
+            if (m.get("status").toString().equals("200")) {//成功
                 JSONObject jasonObject = JSONObject.parseObject(m.get("result").toString());
                 insertjkzj(jasonObject, ip);
             }
@@ -51,6 +51,11 @@ public class JkServiceImpl {
         }
     }
 
+    /**
+     *
+     * @param jasonObject
+     * @param ip
+     */
     private void insertjkzj(JSONObject jasonObject, String ip) {
         JSONArray jasonArray = jasonObject.getJSONArray("resultObj");
         for (int i = 0; i < jasonArray.size(); i++) {
@@ -62,22 +67,22 @@ public class JkServiceImpl {
 
     }
 
+    /**
+     * 插入主机ip
+     * @param jsonObject
+     */
     private void insertintojkzj(JSONObject jsonObject) {
         String ip = jsonObject.get("ip").toString();
         List<HostSiteMonitor> list = jkzjDao.selectByIp(ip);
+        HostSiteMonitor hostsm=new HostSiteMonitor();
+        hostsm.setCpuRate(jsonObject.get("cpuRate").toString());
+        hostsm.setMemRate(jsonObject.get("memRate").toString());
+        hostsm.setDiskRate(jsonObject.get("diskRate").toString());
+        hostsm.setIp(ip);
         if (list.size() != 0) {
-            HostSiteMonitor hostsm = list.get(0);
-            hostsm.setCpuRate(jsonObject.get("cpuRate").toString());
-            hostsm.setMemRate(jsonObject.get("memRate").toString());
-            hostsm.setDiskRate(jsonObject.get("diskRate").toString());
-            hostsm.setIp(ip);
+            hostsm.setId(list.get(0).getId());
             jkzjDao.updateByPrimaryKey(hostsm);
         } else {
-            HostSiteMonitor hostsm = new HostSiteMonitor();
-            hostsm.setCpuRate(jsonObject.get("cpuRate").toString());
-            hostsm.setMemRate(jsonObject.get("memRate").toString());
-            hostsm.setDiskRate(jsonObject.get("diskRate").toString());
-            hostsm.setIp(ip);
             jkzjDao.insert(hostsm);
         }
     }
