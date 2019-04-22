@@ -47,7 +47,7 @@ cBoard.controller('interfaceCtrl', function ($scope, $rootScope, $http, dataServ
         }
     };
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
-            if (fromState.controller == 'apiCtrl') {
+            if (fromState.controller == 'interfaceCtrl') {
                 $interval.cancel($scope.interval);
             }
         }

@@ -1,6 +1,5 @@
 package org.taiji.rst.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -13,15 +12,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.taiji.controller.BaseController;
 import org.taiji.rst.dao.*;
-import org.taiji.rst.pojo.*;
+import org.taiji.rst.pojo.AlarmReportMsg;
+import org.taiji.rst.pojo.CitySyncNum;
+import org.taiji.rst.pojo.HostSiteMonitor;
+import org.taiji.rst.pojo.SyncTotal;
 import org.taiji.util.DateUtil;
 import org.taiji.util.ListSortMap;
 import org.taiji.util.StringUtil;
 import org.taiji.util.UnitUtils;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

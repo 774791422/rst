@@ -1,0 +1,87 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title">{{'CONFIG.MERGE.MERGE_NEW'|translate}}</h4>
+</div>
+<div class="modal-body">
+    <div id="fuelux-wizard-container" ng-init="initWizard();">
+        <div>
+            <ul class="steps">
+                <li data-step="1" class="active">
+                    <span class="step">1</span>
+                    <span class="title">基本信息</span>
+                </li>
+                <li data-step="2">
+                    <span class="step">2</span>
+                    <span class="title">字段映射</span>
+                </li>
+            </ul>
+        </div>
+        <hr />
+        <div class="step-content pos-rel">
+            <div class="step-pane active" data-step="1">
+                <form class="form-horizontal" name="myForm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">名称<span style="color:red">*</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="merge.name" name="name" required>
+                            <span style="color:red" ng-show="myForm.name.$touched && myForm.name.$error.required">此项为必填项</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">数据集<span style="color:red">*</span></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" multiple="multiple" ng-model="datasetSelect" name="datasetSelect"
+                                  ng-change="setSelect();"  ng-options="dataset.dataset_name for dataset in datasetList" ng-init="initDataset();"></select>
+                            <span style="color:red" ng-show="myForm.datasetSelect.$touched && myForm.dataset.$error.required">此项为必填项</span>
+                        </div>
+                    </div>
+                    <input type="text" ng-show="false" ng-model="dataset" name="dataset" required/>
+                </form>
+            </div>
+            <divI class="step-pane" data-step="2">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'CONFIG.MERGE.MAPPING'|translate}}</h3>
+                            <div class="box-tools">
+                                <i class="fa fa-plus toolbar-icon" ng-click="newColumn()" title="{{'COMMON.NEW'|translate}}" style="margin-top: 4px;"></i>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <tbody>
+                                <tr>
+                                    <th>{{'CONFIG.MERGE.COLUMN_NAME'|translate}}</th>
+                                    <th>{{'CONFIG.MERGE.COLUMN_STATE'|translate}}</th>
+                                    <th>{{'OPERATION.NAME'|translate}}</th>
+                                </tr>
+                                <tr ng-repeat="column in columnList">
+                                    <td>{{column.name}}</td>
+                                    <td>{{getState(column.state)}}</td>
+                                    <td>
+                                        <i class="fa fa-edit toolbar-icon" ng-click="editColumn(column.id)" title="{{'COMMON.EDIT'|translate}}"></i>&nbsp;&nbsp;
+                                        <i class="fa fa-trash-o toolbar-icon"  ng-click="deleteColumn(column.id)" title="{{'COMMON.DELETE'|translate}}"></i>&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+                </div>
+            </divI>
+        </div>
+    </div>
+    <div class="wizard-actions">
+        <button class="btn btn-prev">
+            <i class="ace-icon fa fa-arrow-left"></i>
+            上一步
+        </button>
+        <button class="btn btn-success btn-next" ng-disabled="myForm.$invalid" data-last="完成">
+            下一步
+            <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+        </button>
+    </div>
+</div>

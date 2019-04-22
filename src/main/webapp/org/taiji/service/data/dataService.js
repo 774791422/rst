@@ -10,7 +10,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
         if (datasetList) {
             deferred.resolve(angular.copy(datasetList));
         } else {
-            $http.get("dashboard/getDatasetList.do").success(function (data) {
+            $http.get("/dashboard/getDatasetList.do").success(function (data) {
                 deferred.resolve(data);
             });
         }
@@ -165,7 +165,7 @@ cBoard.service('dataService', function ($http, $q, updateService) {
             cfg.values = _.map(dataSeries, function (s) {
                 return {column: s.name, aggType: s.aggregate};
             });
-            $http.post("dashboard/getAggregateData.do", {
+            $http.post("/dashboard/getAggregateData.do", {
                 datasourceId: datasource,
                 query: angular.toJson(query),
                 datasetId: datasetId,

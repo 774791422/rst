@@ -9,7 +9,7 @@ var settings = {
 var CB_I18N;
 
 $.ajax({
-    url: "i18n/" + settings.preferredLanguage + "/language.json",
+    url: "/i18n/" + settings.preferredLanguage + "/language.json",
     type: "GET",
     dataType: "json",
     success: function(data) {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.MonitorDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.DashboardSysMonitor">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="host" property="host" jdbcType="VARCHAR"/>
+        <result column="zjname" property="zjname" jdbcType="VARCHAR"/>
+        <result column="cpu" property="cpu" jdbcType="VARCHAR"/>
+        <result column="disk" property="disk" jdbcType="VARCHAR"/>
+        <result column="men" property="men" jdbcType="VARCHAR"/>
+        <result column="net_io" property="netIo" jdbcType="VARCHAR"/>
+        <result column="net_io_out" property="netIoOut" jdbcType="VARCHAR"/>
+        <result column="sys_order" property="sysOrder" jdbcType="INTEGER"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="findList" resultType="java.util.Map">
+        select f.id,f.zjname,f.host,f.update_time,f.state,f.cpu,f.disk,f.men,f.net_io,f.net_io_out from dashboard_sys_monitor f
+    </select>
+    <select id="findhostList" resultMap="BaseResultMap">
+        select f.id,f.zjname,f.host,f.update_time,f.state,f.cpu,f.disk,f.men,f.net_io,f.net_io_out from dashboard_sys_monitor f
+    </select>
+    <select id="findByHost"  resultMap="BaseResultMap">
+        select f.id,f.zjname,f.host,f.update_time,f.state,f.cpu,f.disk,f.men,f.net_io,f.net_io_out from dashboard_sys_monitor f where f.host=#{arg0}
+    </select>
+    <select id="getMonitor"  resultMap="BaseResultMap">
+        select f.id,f.zjname,f.host,f.update_time,f.state,f.cpu,f.disk,f.men,f.net_io,f.net_io_out from dashboard_sys_monitor f where f.id=#{arg0}
+    </select>
+</mapper>

@@ -1,0 +1,44 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{{'TEMPLATE.TEMPLATE.TEMPLATE'|translate}}</h3>
+                    <div class="box-tools">
+                        <i class="fa fa-plus toolbar-icon" ng-click="new()" title="{{'COMMON.NEW'|translate}}" style="margin-top: 4px;"></i>
+                        <div class="input-group input-group-sm" style="width: 150px; margin-left: 5px; float: right;">
+                            <input type="text" name="table_search" ng-model="search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" ng-click="loadTemplateList()"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>{{'TEMPLATE.TEMPLATE.NAME'|translate}}</th>
+                            <th>{{'TEMPLATE.TEMPLATE.FOLDER'|translate}}</th>
+                            <th>{{'OPERATION.NAME'|translate}}</th>
+                        </tr>
+                        <tr ng-repeat="template in templateList">
+                            <td>{{template.templateName}}</td>
+                            <td>{{template.templateFolder}}</td>
+                            <td>
+                                <i class="fa fa-edit toolbar-icon" ng-click="edit(template.id)" title="{{'COMMON.EDIT'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-exchange toolbar-icon" ng-click="trans(template.id)" title="{{'COMMON.TRANS'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-search toolbar-icon" ng-click="view(template.id)" title="{{'COMMON.VIEW'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-trash-o toolbar-icon"  ng-click="delete(template.id)" title="{{'COMMON.DELETE'|translate}}"></i>&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

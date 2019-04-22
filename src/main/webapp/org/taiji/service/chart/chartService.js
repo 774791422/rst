@@ -12,6 +12,11 @@ cBoard.service('chartService', function($q, dataService, chartPieService, chartL
   this.render = function(containerDom, widget, optionFilter, scope, reload, persist, relations, isCockpit) {
       if (isCockpit) {
           CBoardEChartRender.prototype.theme = "dark";
+          switch (isCockpit) {
+              case 'blue':
+                  CBoardEChartRender.prototype.theme = "blue";
+                  break;
+          }
       } else {
           CBoardEChartRender.prototype.theme = "theme-fin1"
       }
@@ -136,6 +141,9 @@ cBoard.service('chartService', function($q, dataService, chartPieService, chartL
       case 'kpi':
         chart = chartKpiService;
         break;
+      case 'text':
+         chart = chartTextService;
+         break;
       case 'table':
         chart = chartTableService;
         break;

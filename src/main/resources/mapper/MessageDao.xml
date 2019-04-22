@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.MessageDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.DashboardMessage">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="obj_id" property="objId" jdbcType="INTEGER"/>
+        <result column="datatype" property="datatype" jdbcType="VARCHAR"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="readstate" property="readstate" jdbcType="INTEGER"/>
+        <result column="tipstate" property="tipstate" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getObjectId" resultMap="BaseResultMap">
+        select * from dashboard_message where obj_id=#{arg0}
+    </select>
+    <select id="getId" resultMap="BaseResultMap">
+        select * from dashboard_message where id=#{arg0}
+    </select>
+
+    <select id="selectMessage" resultMap="BaseResultMap">
+        select  obj_id,max(id)as id,max(datatype)as datatype ,max(message)as message,max(readstate)as readstate,max(tipstate) as tipstate
+,max(create_time) as create_time,max(update_time)as update_time from dashboard_message where readstate=#{arg0} and tipstate=#{arg1}
+GROUP BY obj_id
+    </select>
+    <select id="list" resultMap="BaseResultMap">
+        select * from dashboard_message
+    </select>
+</mapper>

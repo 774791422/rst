@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.QuotaDataDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.DashboardQuotaData">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="parentid" property="parentid" jdbcType="INTEGER"/>
+        <id column="datasource" property="datasource" jdbcType="INTEGER"/>
+        <id column="dataset" property="dataset" jdbcType="INTEGER"/>
+        <id column="quota" property="quota" jdbcType="VARCHAR"/>
+        <id column="warntype" property="warntype" jdbcType="INTEGER"/>
+        <id column="warnValue" property="warnValue" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="findList" resultType="java.util.Map">
+        select q.id,q.parentid,q.datasource,q.dataset,q.quota,d.dataset_name,s.source_name,q.update_time from dashboard_quota_dataset q,dashboard_dataset d ,dashboard_datasource s where
+q.dataset=d.dataset_id and q.datasource=s.datasource_id and
+q.parentid=#{arg0}
+    </select>
+    <select id="getQuota"  resultMap="BaseResultMap">
+       select * from dashboard_quota_dataset where id=#{arg0}
+    </select>
+    <resultMap id="DataSetResultMap" type="org.taiji.pojo.DashboardDataset">
+        <id column="dataset_id" property="id" jdbcType="INTEGER"/>
+        <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <id column="data_json" property="data" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getDataSet"  resultMap="DataSetResultMap">
+       select * from dashboard_dataset where dataset_id=#{arg0}
+    </select>
+    <select id="findAllQuotaList"  resultMap="BaseResultMap">
+        SELECT d.* FROM dashboard_quota_dataset d join dashboard_quota q where q.id=d.parentid
+    </select>
+    <select id="selectQuotaByParentid" resultType="java.util.Map">
+        select count(id)as c from dashboard_quota_dataset where parentid=#{arg0}
+    </select>
+
+</mapper>

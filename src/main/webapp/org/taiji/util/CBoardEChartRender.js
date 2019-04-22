@@ -37,7 +37,8 @@ CBoardEChartRender.prototype.chart = function (group, persist) {
     var options = this.isDeppSpec == true ? self.options : $.extend(true, {}, self.basicOption, self.options);
     if (options.visualMap != undefined) {
         $(this.container).css({
-            height: 500 + "px",
+            //height: 500 + "px",
+            height:'100%',
             width: '100%'
         });
     }

@@ -1,0 +1,59 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">指标统计分析</h3>
+                    <div  style="position: absolute;right: 260px;top: 5px;">
+                        <div class="input-group input-group-sm" style="width: 610px; margin-left: 5px; ">
+                            <select class="form-control " ng-model="search.selected"  style="width: 150px"  ng-options="m.name for m in quotaList">
+                                <option value="">所有指标</option>
+                            </select>
+                            <input type="text"  ng-model="search.daterange" date-range-picker name="table_search"  style="width: 300px" class="form-control datepicker " placeholder="时间区间"  options="dateRangeCfg">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default" ng-click="searchSumbit()"><i class="fa fa-search">查询</i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding" ng-if="flag==true">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>指标名称</th>
+                            <th>指标编码</th>
+                            <th>关联数据集个数</th>
+                            <th>异常处理个数(未处理/已处理)</th>
+                        </tr>
+                        <tr ng-repeat="quota in quotatjList">
+                            <td>{{quota.name}}</td>
+                            <td>{{quota.code_value}}</td>
+                            <td>{{quota.datasetNum}}</a></td>
+                            <td>{{quota.cl}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+                </div>
+
+                <div class="box-body table-responsive no-padding" ng-if="flag==false">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td style="text-align: center">
+                                无数据
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

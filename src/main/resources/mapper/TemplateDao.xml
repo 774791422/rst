@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.TemplateDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.Template">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
+        <result column="template_folder" property="templateFolder" jdbcType="VARCHAR"/>
+        <result column="template_file" property="templateFile" jdbcType="VARCHAR"/>
+        <result column="template_info" property="templateInfo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,template_name,template_folder,template_file,template_info,create_time,create_user
+    </sql>
+    <select id="selectTemplatelist" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/> from t_template
+        <where>
+            <if test="search != null and  search !=''">
+                template_name like CONCAT(CONCAT('%', #{search}),'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

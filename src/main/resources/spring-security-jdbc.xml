@@ -14,12 +14,11 @@
         <security:intercept-url pattern="/js/**" access="permitAll"/>
         <security:intercept-url pattern="/login**" access="permitAll"/>
         <security:intercept-url pattern="/css/**" access="permitAll"/>
-        <security:intercept-url pattern="/index.html" access="permitAll"/>
-        <security:intercept-url pattern="/cityIndex.html" access="permitAll"/>
-        <security:intercept-url pattern="/rst/**" access="permitAll"/>
+        <security:intercept-url pattern="/ssoLogin**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="!anonymous"/>
         <security:form-login login-page="/login.do" username-parameter="username" password-parameter="password"
                              default-target-url="/starter.html" always-use-default-target="true"/>
+        <security:custom-filter before="FORM_LOGIN_FILTER" ref="myUsernamePasswordAuthenticationFilter" />
         <security:logout logout-url="/j_spring_cas_security_logout"/>
         <security:remember-me remember-me-parameter="remember_me"/>
         <security:csrf disabled="true"/>
@@ -42,7 +41,6 @@
             <ref bean="passwordEncoder"/>
         </property>
     </bean>
-
     <bean id="userDetailsService"
           class="org.taiji.security.service.DbUserDetailService">
         <property name="dataSource" ref="masterDataSource">
@@ -69,5 +67,7 @@
 
     <bean id="dbAuthenticationService"
           class="org.taiji.security.service.DefaultAuthenticationService"/>
-
+    <bean id="myUsernamePasswordAuthenticationFilter" class="org.taiji.security.service.MyUsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"></property>
+    </bean>
 </beans>

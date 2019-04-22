@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.StyleDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.Style">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="style_name" property="styleName" jdbcType="VARCHAR"/>
+        <result column="style_folder" property="styleFolder" jdbcType="VARCHAR"/>
+        <result column="style_file" property="styleFile" jdbcType="VARCHAR"/>
+        <result column="style_info" property="styleInfo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,style_name,style_folder,style_file,style_info,create_time,create_user
+    </sql>
+    <select id="selectStylelist" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/> from t_style
+        <where>
+            <if test="search != null and  search !=''">
+                style_name like CONCAT(CONCAT('%', #{search}),'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

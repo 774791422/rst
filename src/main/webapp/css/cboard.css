@@ -180,7 +180,8 @@
 .cRelation.disabled{ background-image: url(../imgs/relation.png); }
 .cWorldMap{ background-image: url(../imgs/worldMap-active.png);}
 .cWorldMap.disabled{ background-image: url(../imgs/worldMap.png);}
-
+.cText{  background-image: url(../imgs/kpi-active.png);  }
+.cText.disabled{  background-image: url(../imgs/kpi.png);  }
 .chart-type a.active{
     background-color: #FFF;
     box-shadow: 0 0 0 2px rgba(81,130,227,.06),inset 0 0 0 2px rgba(81,129,228,.6);

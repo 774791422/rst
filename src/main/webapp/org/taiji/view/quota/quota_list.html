@@ -1,0 +1,47 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">指标管理</h3>
+                    <div class="box-tools">
+                        <i class="fa fa-plus toolbar-icon" ng-click="newQuota()" title="{{'COMMON.NEW'|translate}}" style="margin-top: 4px;"></i>
+                        <div class="input-group input-group-sm" style="width: 150px; margin-left: 5px; float: right;">
+                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>指标名称</th>
+                            <th>指标编码</th>
+                            <th>异常数(未处理/全部)</th>
+                            <th>最后检查时间</th>
+                            <th>{{'OPERATION.NAME'|translate}}</th>
+                        </tr>
+                        <tr ng-repeat="quota in quotaList">
+                            <td>{{quota.name}}</td>
+                            <td>{{quota.code_value}}</td>
+                            <td><a href="javascript:void(0)" ng-click="warnQuota(quota.id)">{{quota.warns}}</a></td>
+                            <td>{{getTime(quota.update_time)}}</td>
+                            <td>
+                                <i class="fa fa-edit toolbar-icon" ng-click="updateQuota(quota.id)" title="{{'COMMON.EDIT'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-trash-o toolbar-icon" ng-click="deleteQuota(quota.id)" title="{{'COMMON.DELETE'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-wrench toolbar-icon" ng-click="wrenchQuota(quota.id)" title="数据集指标配置"></i>&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

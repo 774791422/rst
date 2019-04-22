@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>DIDP | Starter</title>
+    <title>DAADP | Starter</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -24,6 +24,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="plugins/ngJsTree/style.css">
     <link rel="stylesheet" href="plugins/jQueryUI/theme.css">
     <link rel="stylesheet" href="plugins/jQueryUI/jquery-ui.css">
+    <link rel="stylesheet" href="plugins/ace/ace.min.css">
 
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
@@ -60,6 +61,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="lib/numbro.min.js"></script>
     <script src="lib/ui-select.min.js"></script>
 
+
     <script src="plugins/jQueryUI/jquery-ui.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
@@ -72,6 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- ECharts -->
     <script src="plugins/echart/theme-fin1.js"></script>
     <script src="plugins/echart/dark.js"></script>
+    <script src="plugins/echart/blue.js"></script>
     <script src="plugins/echart/echarts-wordcloud.min.js"></script>
     <script src="plugins/echart/echarts-liquidfill.min.js"></script>
 
@@ -80,10 +83,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!--<script src="plugins/echart/world.js"></script>-->
     <!--<script src="plugins/echart/china.json"></script>-->
     <!--<script src="plugins/echart/china.js"></script>-->
+    <script src="plugins/ace/wizard.min.js"></script>
+    <script src="plugins/ace/ace-elements.min.js"></script>
+    <script src="plugins/ace/ace.min.js"></script>
     <script src="plugins/ace/ace.js"></script>
     <script src="plugins/ace/cb-complete-list.js"></script>
     <script type="text/javascript" src="plugins/ace/ext-language_tools.js"></script>
     <script src="plugins/ui-ace/ui-ace.js"></script>
+
     <script src="plugins/FineMap/d3.v3.js"></script>
     <script src="plugins/FineMap/d3.tip.js"></script>
 
@@ -138,6 +145,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/zTree/js/jquery.ztree.core-3.5.min.js"></script>
     <script src="plugins/zTree/js/jquery.ztree.excheck-3.5.min.js"></script>
     <script src="plugins/pagination/tm.pagination.js"></script>
+    <script src="plugins/angular-file-upload/angular-file-upload.js"></script>
+    <script src="plugins/jquery-table2excel/jquery.table2excel.min.js"></script>
     <style>
         .modal-fit .modal-dialog {
             left: 0;
@@ -160,14 +169,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     </style>
     <style>
-        .page-list .pagination {float:left;}
-        .page-list .pagination span {cursor: pointer;}
-        .page-list .pagination .separate span{cursor: default; border-top:none;border-bottom:none;}
-        .page-list .pagination .separate span:hover {background: none;}
-        .page-list .page-total {float:left; margin: 25px 20px;}
-        .page-list .page-total input, .page-list .page-total select{height: 26px; border: 1px solid #ddd;}
-        .page-list .page-total input {width: 40px; padding-left:3px;}
-        .page-list .page-total select {width: 50px;}
+        .page-list .pagination {
+            float: left;
+        }
+
+        .page-list .pagination span {
+            cursor: pointer;
+        }
+
+        .page-list .pagination .separate span {
+            cursor: default;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .page-list .pagination .separate span:hover {
+            background: none;
+        }
+
+        .page-list .page-total {
+            float: left;
+            margin: 25px 20px;
+        }
+
+        .page-list .page-total input, .page-list .page-total select {
+            height: 26px;
+            border: 1px solid #ddd;
+        }
+
+        .page-list .page-total input {
+            width: 40px;
+            padding-left: 3px;
+        }
+
+        .page-list .page-total select {
+            width: 50px;
+        }
     </style>
 </head>
 <!--
@@ -258,6 +295,14 @@ desired effect
 <script src="org/taiji/controller/config/job/mailJobCtrl.js"></script>
 <script src="org/taiji/controller/config/job/methodJobCtrl.js"></script>
 <script src="org/taiji/controller/config/interfaceCtrl.js"></script>
+<script src="org/taiji/controller/config/monitorCtrl.js"></script>
+<script src="org/taiji/controller/config/monitorChartsCtrl.js"></script>
+<script src="org/taiji/controller/config/logmanageCtrl.js"></script>
+<script src="org/taiji/controller/config/quotaCtrl.js"></script>
+<script src="org/taiji/controller/config/quotaDataCtrl.js"></script>
+<script src="org/taiji/controller/config/quotaWarnCtrl.js"></script>
+<script src="org/taiji/controller/config/messageCtrl.js"></script>
+<script src="org/taiji/controller/config/quotatjCtrl.js"></script>
 
 <script src="org/taiji/controller/dashboard/paramCtrl.js"></script>
 <script src="org/taiji/controller/config/shareResCtrl.js"></script>
@@ -273,6 +318,7 @@ desired effect
 <script src="org/taiji/service/chart/chartDataProcess.js"></script>
 <script src="org/taiji/service/chart/chartFunnelService.js"></script>
 <script src="org/taiji/service/chart/chartKpiService.js"></script>
+<script src="org/taiji/service/chart/chartTextService.js"></script>
 <script src="org/taiji/service/chart/chartLineService.js"></script>
 <script src="org/taiji/service/chart/chartContrastService.js"></script>
 <script src="org/taiji/service/chart/chartPieService.js"></script>
@@ -294,12 +340,185 @@ desired effect
 <script src="org/taiji/service/chart/chartRelationService.js"></script>
 <script src="org/taiji/service/chart/chartWorldMapService.js"></script>
 <script src="org/taiji/directive/dashboard/dashboardWidget.js"></script>
+<script src="org/taiji/directive/validation/validation.js"></script>
 <script src="org/taiji/filter/dashboard/dashboardViewFilter.js"></script>
 
 <script src="plugins/crossTable/plugin.js"></script>
 <script src="plugins/FineMap/plugin.js"></script>
 <script src="org/taiji/controller/admin/menuAdminCtrl.js"></script>
+<script src="org/taiji/controller/template/styleCtrl.js"></script>
+<script src="org/taiji/controller/template/templateCtrl.js"></script>
+<script src="org/taiji/controller/visual/scene.js"></script>
+<script src="org/taiji/controller/visual/layout.js"></script>
+<script src="org/taiji/controller/knowledge/knowledgeCtrl.js"></script>
+<script src="org/taiji/controller/config/mergeCtrl.js"></script>
 <!--<script src="plugins/FineMap/.js"></script>-->
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    .float_layer {
+        width: 300px;
+        height: 200px;
+        border: 1px solid #aaaaaa;
+        display: none;
+        background: #fff;
+    }
+
+    .float_layer h2 {
+        height: 25px;
+        line-height: 25px;
+        padding-left: 10px;
+        font-size: 14px;
+        color: #333;
+        background: url(imgs/title_bg.gif) repeat-x;
+        border-bottom: 1px solid #aaaaaa;
+        position: relative;
+    }
+
+    /*.float_layer .min {*/
+        /*width: 21px;*/
+        /*height: 20px;*/
+        /*background: url(imgs/min.gif) no-repeat 0 bottom;*/
+        /*position: absolute;*/
+        /*top: 2px;*/
+        /*right: 25px;*/
+    /*}*/
+
+    /*.float_layer .min:hover {*/
+        /*background: url(imgs/min.gif) no-repeat 0 0;*/
+    /*}*/
+
+    /*.float_layer .max {*/
+        /*width: 21px;*/
+        /*height: 20px;*/
+        /*background: url(imgs/max.gif) no-repeat 0 bottom;*/
+        /*position: absolute;*/
+        /*top: 2px;*/
+        /*right: 25px;*/
+    /*}*/
+
+    /*.float_layer .max:hover {*/
+        /*background: url(imgs/max.gif) no-repeat 0 0;*/
+    /*}*/
+
+    .float_layer .close {
+        width: 21px;
+        height: 20px;
+        background: url(imgs/close.gif) no-repeat 0 bottom;
+        position: absolute;
+        top: 2px;
+        right: 3px;
+    }
+
+    .float_layer .close:hover {
+        background: url(imgs/close.gif) no-repeat 0 0;
+    }
+
+    .float_layer .content {
+        height: 160px;
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 18px;
+        color: #666;
+        text-indent: 28px;
+    }
+
+    .float_layer .wrap {
+        padding: 10px;
+    }
+</style>
+<script type="text/javascript">
+    function miaovAddEvent(oEle, sEventName, fnHandler) {
+        if (oEle.attachEvent) {
+            oEle.attachEvent('on' + sEventName, fnHandler);
+        } else {
+            oEle.addEventListener(sEventName, fnHandler, false);
+        }
+    }
+
+
+    $(function(){
+        setInterval(init,5000);
+    });
+
+    function init(){
+        $.ajax({
+            type : "POST", //提交方式
+            url : "/message/getMessage.do",//路径
+            data : {
+            },//数据，这里使用的是Json格式进行传输
+            success : function(result) {//返回数据根据结果进行相应的处理
+                if ( result.state>0 ) {
+                    remind();
+                } else {
+
+                }
+            }
+        });
+    }
+
+    function list() {
+        var oDiv = document.getElementById('miaov_float_layer');
+        oDiv.style.display = 'none';
+        var url=window.location.href;
+        url=url.split("#")[0];
+        window.location.href=url+"#/config/message";
+    }
+
+
+    function remind(){
+        var oDiv = document.getElementById('miaov_float_layer');
+        var oBtnMin = document.getElementById('btn_min');
+        var oBtnClose = document.getElementById('btn_close');
+        var oDivContent = oDiv.getElementsByTagName('div')[0];
+        var iMaxHeight = 0;
+        var isIE6 = window.navigator.userAgent.match(/MSIE 6/ig) && !window.navigator.userAgent.match(/MSIE 7|8/ig);
+        oDiv.style.display = 'block';
+        iMaxHeight = oDivContent.offsetHeight;
+        if (isIE6) {
+            oDiv.style.position = 'absolute';
+            repositionAbsolute();
+            miaovAddEvent(window, 'scroll', repositionAbsolute);
+            miaovAddEvent(window, 'resize', repositionAbsolute);
+        } else {
+            oDiv.style.position = 'fixed';
+            repositionFixed();
+            miaovAddEvent(window, 'resize', repositionFixed);
+        }
+        oBtnMin.timer = null;
+        oBtnMin.isMax = true;
+        oBtnClose.onclick = function () {
+            oDiv.style.display = 'none';
+        };
+    }
+
+
+    function repositionAbsolute() {
+        var oDiv = document.getElementById('miaov_float_layer');
+        var left = document.body.scrollLeft || document.documentElement.scrollLeft;
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        var width = document.documentElement.clientWidth;
+        var height = document.documentElement.clientHeight;
+        oDiv.style.left = left + width - oDiv.offsetWidth-20 + 'px';
+        oDiv.style.top = top + height - oDiv.offsetHeight + 'px';
+    }
+
+    function repositionFixed() {
+        var oDiv = document.getElementById('miaov_float_layer');
+        var width = document.documentElement.clientWidth;
+        var height = document.documentElement.clientHeight;
+        oDiv.style.left = width - oDiv.offsetWidth-20 + 'px';
+        oDiv.style.top = height - oDiv.offsetHeight + 'px';
+    }
+</script>
+
 
 <script type="text/ng-template" id="echartContent">
     <div class="col-md-{{widget.width}}">
@@ -308,7 +527,8 @@ desired effect
                 <!--<i class="fa fa-bar-chart-o"></i>-->
                 <h3 class="box-title">{{widget.name}}</h3>
                 <div class="box-tools pull-right" ng-show="x" ng-init="x=false">
-                    <button name="reload_{{widget.widget.id}}" type="button" class="btn btn-box-tool" ng-click="reload(widget)"><i
+                    <button name="reload_{{widget.widget.id}}" type="button" class="btn btn-box-tool"
+                            ng-click="reload(widget)"><i
                             class="fa fa-refresh"></i>
                     </button>
                     <button type="button" class="btn btn-box-tool" ng-if="widgetCfg" ng-click="config(widget)"><i
@@ -332,11 +552,12 @@ desired effect
 <script type="text/ng-template" id="chartContent">
     <div class="col-md-{{widget.width}}" style="z-index: 99;">
         <div class="box box-solid">
-            <div class="box-header" ng-mouseover="x=true" ng-mouseleave="x=false" >
+            <div class="box-header" ng-mouseover="x=true" ng-mouseleave="x=false">
                 <!--<i class="fa fa-bar-chart-o"></i>-->
                 <h3 class="box-title">{{widget.name}}</h3>
                 <div class="box-tools pull-right" ng-show="x" ng-init="x=false">
-                    <button name="reload_{{widget.widget.id}}" type="button" class="btn btn-box-tool" ng-click="reload(widget)"><i
+                    <button name="reload_{{widget.widget.id}}" type="button" class="btn btn-box-tool"
+                            ng-click="reload(widget)"><i
                             class="fa fa-refresh"></i>
                     </button>
                     <button type="button" class="btn btn-box-tool" ng-if="widgetCfg" ng-click="config(widget)"><i
@@ -354,5 +575,20 @@ desired effect
         </div>
     </div>
 </script>
+<div class="float_layer" id="miaov_float_layer">
+    <h2 style="margin-top:0px !important">
+        <strong>信息提醒</strong>
+        <a id="btn_min" href="javascript:" class="min"></a>
+        <a id="btn_close" href="javascript:" class="close"></a>
+    </h2>
+    <div class="content">
+
+        <div class="wrap">
+            <a href="javascript:void(0);" onclick="list()">
+                 有未处理的信息,请查看！！！
+            </a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

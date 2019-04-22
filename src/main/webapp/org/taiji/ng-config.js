@@ -108,6 +108,96 @@ angular.module('cBoard').config(['$stateProvider', function ($stateProvider) {
             templateUrl: 'org/taiji/view/admin/menu.html',
             controller: 'menuAdminCtrl'
         })
+        .state('config.monitor', {
+            url: '/monitor',
+            templateUrl: 'org/taiji/view/moniter/sys_moniter.html',
+            controller: 'monitorCtrl'
+        })
+        .state('config.monitorChart', {
+            url: '/monitorChart',
+            templateUrl: 'org/taiji/view/moniter/charts_moniter.html',
+            controller: 'monitorChartCtrl'
+        })
+        .state('config.quota', {
+            url: '/quota',
+            templateUrl: 'org/taiji/view/quota/quota_list.html',
+            controller: 'quotaCtrl'
+        })
+        .state('config.quotaData', {
+            url: '/quotaData',
+            templateUrl: 'org/taiji/view/quota/quotaData_list.html',
+            controller: 'quotaDataCtrl'
+        })
+        .state('config.quotaWarn', {
+            url: '/quotaWarn',
+            templateUrl: 'org/taiji/view/quota/quotaWarn_list.html',
+            controller: 'quotaWarnCtrl'
+        })
+        .state('config.quotatj', {
+            url: '/quotatj',
+            templateUrl: 'org/taiji/view/quota/tj/quota_tj.html',
+            controller: 'quotatjCtrl'
+        })
+        .state('config.logmanage', {
+            url: '/monitorlog',
+            templateUrl: 'org/taiji/view/moniter/monitorlog/sys_logmanage.html',
+            controller: 'logmanageCtrl'
+        })
+        .state('message', {
+            url: '/message',
+            abstract: true,
+            template: '<div ui-view></div>'
+        })
+        .state('config.message', {
+            url: '/message',
+            templateUrl: 'org/taiji/view/message/message_list.html',
+            controller: 'messageCtrl'
+        })
+        .state('template', {
+            url: '/template',
+            abstract: true,
+            template: '<div ui-view></div>'
+        })
+        .state('template.style', {
+            url: '/style',
+            templateUrl: 'org/taiji/view/template/style.html',
+            controller: 'styleCtrl'
+        })
+        .state('template.template', {
+            url: '/template',
+            templateUrl: 'org/taiji/view/template/template.html',
+            controller: 'templateCtrl'
+        })
+        .state('visual', {
+            url: '/visual',
+            abstract: true,
+            template: '<div ui-view></div>'
+        })
+        .state('visual.scene', {
+            url: '/scene',
+            templateUrl: 'org/taiji/view/visual/scene.html',
+            controller: 'sceneCtrl'
+        })
+        .state('visual.layout', {
+            url: '/layout',
+            templateUrl: 'org/taiji/view/visual/layout.html',
+            controller: 'layoutCtrl'
+        })
+        .state('monitor', {
+            url: '/monitor',
+            abstract: true,
+            template: '<div ui-view></div>'
+        })
+        .state('monitor.knowledge', {
+            url: '/knowledge',
+            templateUrl: 'org/taiji/view/knowledge/knowledge.html',
+            controller: 'knowledgeCtrl'
+        })
+        .state('config.merge', {
+            url: '/merge',
+            templateUrl: 'org/taiji/view/config/merge.html',
+            controller: 'mergeCtrl'
+        })
 }]);
 
 angular.module('cBoard').factory('sessionHelper', ["$rootScope", "$q", function ($rootScope, $q) {
@@ -181,7 +271,7 @@ angular.module('cBoard').config(function ($httpProvider) {
 angular.module('cBoard').config(function ($translateProvider, $translatePartialLoaderProvider) {
     $translatePartialLoaderProvider.addPart('language');
     $translateProvider.useLoader('$translatePartialLoader', {
-        urlTemplate: 'i18n/{lang}/{part}.json'
+        urlTemplate: '/i18n/{lang}/{part}.json'
     });
 
     $translateProvider.preferredLanguage(settings.preferredLanguage);

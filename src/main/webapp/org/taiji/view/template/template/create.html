@@ -1,0 +1,75 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title">{{'TEMPLATE.TEMPLATE.TEMPLATE_NEW'|translate}}</h4>
+</div>
+<div class="modal-body" ng-init="clearFile();">
+    <form class="form-horizontal" name="myForm" novalidate>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">名称<span style="color:red">*</span></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="template.templateName" name="templateName" required>
+                <span style="color:red" ng-show="myForm.templateName.$touched && myForm.templateName.$error.required">此项为必填项</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">所在文件夹<span style="color:red">*</span></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="template.templateFolder" name="templateFolder" required ng-remote="/template/checkFolder.do">
+                <span style="color:red" ng-show="myForm.templateFolder.$touched && myForm.templateFolder.$error.required">此项为必填项</span>
+                <span style="color:red" ng-show="myForm.templateFolder.$touched && myForm.templateFolder.$error.remote">文件夹已存在</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">模板文件<span style="color:red">*</span></label>
+            <div class="col-sm-10">
+                <input ng-model="templateFile" ng-show="false" name="templateFile" required/>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th width="50%">名称</th>
+                        <th ng-show="uploader.isHTML5">大小</th>
+                        <th ng-show="uploader.isHTML5">进度</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in uploader.queue">
+                        <td><strong>{{ item.file.name }}</strong></td>
+                        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                        <td ng-show="uploader.isHTML5">
+                            <div class="progress" style="margin-bottom: 0;">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                        </td>
+                        <td nowrap>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="removeFile(item)">
+                                <span class="glyphicon glyphicon-trash"></span> 删除
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <input type="file" nv-file-select uploader="uploader" accept=".html" name="uploader"/>
+                <span style="color:red" ng-show="myForm.uploader.$touched && myForm.templateFile.$error.required">此项为必填项</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">描述</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="template.templateInfo">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok()">{{'COMMON.OK'|translate}}</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">
+        {{'COMMON.CANCEL'|translate}}
+    </button>
+</div>

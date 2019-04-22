@@ -3,7 +3,7 @@
          xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="WebApp_ID" version="3.0">
-    <display-name>zhibing_mybatis</display-name>
+    <display-name>DIDP</display-name>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -47,6 +47,10 @@
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
@@ -85,7 +89,6 @@
         <description>spring listener</description>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
     <servlet>
         <description>spring mvc servlet</description>
         <servlet-name>springmvc</servlet-name>

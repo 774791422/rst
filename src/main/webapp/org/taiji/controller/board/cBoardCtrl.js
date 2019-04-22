@@ -17,7 +17,6 @@ cBoard.controller('cBoardCtrl', function ($rootScope, $scope, $location, $http, 
 
     var getMenuList = function () {
         $http.get("commons/getMenuList.do").success(function (response) {
-            console.log(response);
             $scope.menuList = response;
         });
     };

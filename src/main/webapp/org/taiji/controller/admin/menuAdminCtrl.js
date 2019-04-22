@@ -105,6 +105,12 @@ cBoard.controller('menuAdminCtrl', function ($scope, $rootScope, $http, dataServ
                     $uibModalInstance.close();
                 };
                 $scope.ok = function () {
+                        var treeObj = $.fn.zTree.getZTreeObj("tree");
+                        var nodes = treeObj.getCheckedNodes(true);
+                        for (var i = 0; i < nodes.length; i++) {
+                            $scope.menu.parentId=nodes[i].id;
+                        }
+
                         $http.post("menu/update.do", {json: angular.toJson($scope.menu)}).success(function (serviceStatus) {
                             if (serviceStatus == 1) {
                                 ModalUtils.alert(translate("COMMON.SUCCESS"), "modal-success", "sm");

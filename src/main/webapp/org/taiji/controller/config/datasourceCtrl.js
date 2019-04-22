@@ -1,7 +1,7 @@
 /**
  * Created by yfyuan on 2016/8/19.
  */
-cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $http, ModalUtils, $uibModal, $filter, $q) {
+cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $http, ModalUtils, $uibModal, $filter, $q,FileUploader) {
 
     var translate = $filter('translate');
     $scope.optFlag = 'none';
@@ -31,6 +31,7 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
     $scope.newDs = function () {
         $scope.optFlag = 'new';
         $scope.curDatasource = {config: {}};
+        uploader.clearQueue();
         $scope.dsView = '';
     };
     $scope.editDs = function (ds) {
@@ -38,6 +39,10 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
         $scope.curDatasource = angular.copy(ds);
         $scope.changeDsView();
         $scope.doDatasourceParams();
+        uploader.clearQueue();
+        if($scope.curDatasource.config.file!=null && $scope.curDatasource.config.file!=""){
+            $scope.loadFiles($scope.curDatasource.config.file);
+        }
         $state.go('config.datasource', {id: ds.id}, {notify: false});
     };
     $scope.deleteDs = function (ds) {
@@ -122,6 +127,9 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
 
     $scope.changeDs = function () {
         $scope.changeDsView();
+        if($scope.curDatasource.config.file!=null && $scope.curDatasource.config.file!=""){
+            $scope.deleteFiles($scope.curDatasource.config.file);
+        }
         $scope.curDatasource.config = {};
             $http.get('dashboard/getDatasourceParams.do?type=' + $scope.curDatasource.type).then(function (response) {
                 $scope.params = response.data;
@@ -139,7 +147,6 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
                     }
                 }
             });
-
     };
     
     var validate = function () {
@@ -221,7 +228,7 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
                     $uibModalInstance.close();
                 };
                 $scope.curWidget = {query: {}};
-                $http.get('dashboard/getConfigParams.do?type=' + $scope.datasource.type + '&page=test.html').then(function (response) {
+                $http.get('dashboard/getConfigParams.do?type=' + $scope.datasource.type + '&page=test.html&datasourceId='+$scope.datasource.id).then(function (response) {
                     $scope.params = response.data;
                     for(i in $scope.params){
                         var name = $scope.params[i].name;
@@ -280,5 +287,85 @@ cBoard.controller('datasourceCtrl', function ($scope, $state, $stateParams, $htt
             }
         });
     };
+    var uploader = $scope.uploader = new FileUploader({
+        url: '/file/upload.do',
+        autoUpload:true
+    });
+    uploader.onSuccessItem = function(fileItem, response, status, headers) {
+        if(response.result){
+            fileItem.isSuccess=true;
+            fileItem.file.id=response.data;
+            var fileIds=[]
+           for (var i=0;i<uploader.queue.length;i++){
+               fileIds.push(uploader.queue[i].file.id);
+           }
+           if(fileIds.length>0){
+               var idStr=fileIds.join(",");
+               $scope.curDatasource.config.file=idStr;
+           }else{
+               $scope.curDatasource.config.file=null;
+           }
+            $scope.alerts = [{
+                msg:  '上传成功!',
+                type: 'success'
+            }];
+        }else{
+            fileItem.isSuccess=false;
+            $scope.alerts = [{
+                msg:  '上传失败!',
+                type: 'danger'
+            }];
+        }
+    };
+    $scope.removeFile=function (fileItem) {
+        $http.post("/file/delete.do",{id:fileItem.file.id}).success(function (response) {
+            if(response.result){
+                var fileIds=[]
+                fileItem.remove();
+                for (var i=0;i<uploader.queue.length;i++){
+                    fileIds.push(uploader.queue[i].file.id);
+                }
+                if(fileIds.length>0){
+                    var idStr=fileIds.join(",");
+                    $scope.curDatasource.config.file=idStr;
+                }else{
+                    $scope.curDatasource.config.file=null;
+                }
+                $scope.alerts = [{
+                    msg:  '删除成功!',
+                    type: 'success'
+                }];
+            }else{
+                fileItem.isSuccess=false;
+                $scope.alerts = [{
+                    msg:  '删除失败!',
+                    type: 'danger'
+                }];
+            }
+        });
+    };
+    $scope.loadFiles=function (ids) {
+        $http.post("/file/list.do",{ids:ids}).success(function (response) {
+            for(var i=0;i<response.length;i++){
+                response[i].progress=100;
+                response[i].isSuccess=true;
+                var fileInfo = new FileUploader.FileItem(uploader, {
+                    lastModifiedDate: new Date(),
+                    size: response[i].fileSize,
+                    name: response[i].fileName
+                });
+                fileInfo.file.id=response[i].id;
+                fileInfo.progress = 100;
+                fileInfo.isUploaded = true;
+                fileInfo.isSuccess = true;
+                uploader.queue.push(fileInfo);
+            }
 
+        });
+    }
+    $scope.deleteFiles=function (ids) {
+        $http.post("/file/deleteFiles.do",{ids:ids}).success(function (response) {
+            uploader.clearQueue();
+        });
+    }
 });

@@ -1,0 +1,43 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{{'CONFIG.MERGE.MERGE'|translate}}</h3>
+                    <div class="box-tools">
+                        <i class="fa fa-plus toolbar-icon" ng-click="new()" title="{{'COMMON.NEW'|translate}}" style="margin-top: 4px;"></i>
+                        <div class="input-group input-group-sm" style="width: 150px; margin-left: 5px; float: right;">
+                            <input type="text" name="table_search" ng-model="search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default"  ng-click="loadList()"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>{{'CONFIG.MERGE.NAME'|translate}}</th>
+                            <th>{{'CONFIG.MERGE.ACTIVE'|translate}}</th>
+                            <th>{{'OPERATION.NAME'|translate}}</th>
+                        </tr>
+                        <tr ng-repeat="merge in mergeList">
+                            <td>{{merge.name}}</td>
+                            <td>{{getActive(merge.active)}}</td>
+                            <td>
+                                <i class="fa fa-edit toolbar-icon" ng-click="edit(merge.id)" title="{{'COMMON.EDIT'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-file-archive-o toolbar-icon" ng-click="publish(merge.id)" title="{{'COMMON.PUBLISH'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-trash-o toolbar-icon"  ng-click="delete(merge.id)" title="{{'COMMON.DELETE'|translate}}"></i>&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

@@ -258,7 +258,7 @@ var threeLevelMap = {
             });
     },
     map: function(options) {
-        var mapPath = 'plugins/FineMap/mapdata/china.json';
+        var mapPath = '/plugins/FineMap/mapdata/china.json';
         var that = this ? this : threeLevelMap;
         that.provinceData = options;
         var width = $('.map_wrapper')[0].clientWidth * 0.95;

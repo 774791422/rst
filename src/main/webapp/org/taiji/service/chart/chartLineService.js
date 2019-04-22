@@ -7,9 +7,32 @@ cBoard.service('chartLineService', function ($state, $window) {
     this.render = function (containerDom, option, scope, persist, drill, relations, chartConfig) {
         var render = new CBoardEChartRender(containerDom, option);
         render.addClick(chartConfig, relations, $state, $window);
+        if(chartConfig.showTable){
+            if(chartConfig.showTable=="yes"){
+                renderTable(containerDom, option);
+            }
+        }
         return render.chart(null, persist);
     };
-
+   var renderTable=function (containerDom,opt) {
+        var axisData = opt.xAxis.data;
+        var series = opt.series;
+        var tdHeaders = '<td>维度\\指标</td>';
+        series.forEach(function(item) {
+            tdHeaders += '<td>' + item.name + '</td>';
+        });
+        var table='<div class="table-responsive"><table id="export_table_id" class="table table-bordered table-striped table-hover" style="text-align:center"><tr>' + tdHeaders + '</tr>';
+        var tdBodys = '';
+        for (let i = 0, l = axisData.length; i < l; i++) {
+            for (let j = 0; j < series.length; j++) {
+                tdBodys += '<td>' + series[j].data[i] + '</td>';
+            }
+            table += '<tr><td>' + axisData[i] + '</td>' + tdBodys + '</tr>';
+            tdBodys = '';
+        }
+        table += '</table></div>';
+        containerDom.parent().append(table);
+    };
     this.parseOption = function (data) {
 
         var chartConfig = data.chartConfig;

@@ -144,7 +144,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             "scatter": true, "gauge": true, "wordCloud": true, "treeMap": true,
             "heatMapCalendar": true, "heatMapTable": true, "liquidFill": true,
             "areaMap": true, "contrast": true,"chinaMap":true,"chinaMapBmap":true,
-            "relation":true, "worldMap": true
+            "relation":true, "worldMap": true,"text":true
         };
 
         $scope.value_series_types = [
@@ -158,8 +158,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
         ];
 
         $scope.china_map_types = [
-            {name: translate('CONFIG.WIDGET.SCATTER_MAP'), value: 'scatter'},
-            {name: translate('CONFIG.WIDGET.HEAT_MAP'), value: 'heat'},
+            //{name: translate('CONFIG.WIDGET.SCATTER_MAP'), value: 'scatter'},
+            //{name: translate('CONFIG.WIDGET.HEAT_MAP'), value: 'heat'},
             {name: translate('CONFIG.WIDGET.MARK_LINE_MAP'), value: 'markLine'}
         ];
 
@@ -233,7 +233,7 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
          *  2:  1 or more
          ***************************************/
         $scope.configRule = {
-            line: {keys: 2, groups: -1, filters: -1, values: 2},
+            line: {keys: 2, groups: -1, filters: -1, values: 2,table:1},
             pie: {keys: 2, groups: -1, filters: -1, values: 2},
             kpi: {keys: 0, groups: 0, filters: -1, values: 1},
             table: {keys: -1, groups: -1, filters: -1, values: -1},
@@ -599,6 +599,9 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 } else {
                     for (var k in rule) {
                         var r = true;
+                        if(k=='table'){
+                            continue;
+                        }
                         if (rule[k] == 2) {
                             if (k == 'values') {
                                 r = (_.size(flattenValues) >= 1);
@@ -835,8 +838,9 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 $scope.viewQueryMoal = true;
             });
         };
-
         $scope.preview = function () {
+            var showTable=$("input[name='showTable']:checked").val();
+            $scope.curWidget.config.showTable=showTable;
             $('#preview_widget').html("");
             $timeout(function () {
                 angular.element('#preview_widget_tab').trigger('click');
@@ -871,8 +875,38 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                             option.toolbox = {
                                 feature: {
                                     dataView: {
-                                        show: true,
-                                        readOnly: true
+                                        show : true,
+                                        readOnly : false,
+                                        lang: ['数据视图', '关闭', '导出'],
+                                        optionToContent : function(opt) {
+                                            var axisData = opt.xAxis[0].data;
+                                            var series = opt.series;
+                                            var tdHeaders = '<td>维度\\指标</td>';
+                                            series.forEach(function(item) {
+                                                tdHeaders += '<td>' + item.name + '</td>';
+                                            });
+                                            var table='<div class="table-responsive"><table id="export_table_id" class="table table-bordered table-striped table-hover" style="text-align:center"><tr>' + tdHeaders + '</tr>';
+                                            var tdBodys = '';
+                                            for (let i = 0, l = axisData.length; i < l; i++) {
+                                                for (let j = 0; j < series.length; j++) {
+                                                    tdBodys += '<td>' + series[j].data[i] + '</td>';
+                                                }
+                                                table += '<tr><td>' + axisData[i] + '</td>' + tdBodys + '</tr>';
+                                                tdBodys = '';
+                                            }
+
+                                            table += '</table></div>';
+                                            return table;
+                                        },
+                                        contentToOption: function (opt) {
+                                            $("#export_table_id").table2excel({
+                                                filename: new Date().toISOString().replace(/[\-\:\.]/g, "")+"数据视图",
+                                                fileext: ".xls",
+                                                exclude_img: true,
+                                                exclude_links: true,
+                                                exclude_inputs: true
+                                            });
+                                        },
                                     }
                                 }
                             };
@@ -882,8 +916,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                             option.toolbox = {
                                 feature: {
                                     dataView: {
-                                        show: true,
-                                        readOnly: true
+                                        show : true,
+                                        readOnly : true
                                     }
                                 }
                             };
@@ -899,8 +933,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                             option.toolbox = {
                                 feature: {
                                     dataView: {
-                                        show: true,
-                                        readOnly: true
+                                        show : true,
+                                        readOnly : true
                                     }
                                 }
                             };
@@ -910,8 +944,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                             option.toolbox = {
                                 feature: {
                                     dataView: {
-                                        show: true,
-                                        readOnly: true
+                                        show : true,
+                                        readOnly : true
                                     }
                                 }
                             };

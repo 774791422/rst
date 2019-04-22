@@ -8,8 +8,8 @@ cBoard.service('ModalUtils', function ($uibModal, $filter) {
 
     this.alert = function (content, style, size, callback) {
         $uibModal.open({
-            templateUrl: 'org/taiji/view/util/modal/alert.html',
-            windowTemplateUrl: 'org/taiji/view/util/modal/window.html',
+            templateUrl: '/org/taiji/view/util/modal/alert.html',
+            windowTemplateUrl: '/org/taiji/view/util/modal/window.html',
             backdrop: false,
             windowClass: style,
             size: size,

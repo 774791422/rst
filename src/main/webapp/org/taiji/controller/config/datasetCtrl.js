@@ -13,6 +13,7 @@ cBoard.controller('datasetCtrl', function ($scope, $http, $state, $stateParams, 
     $scope.hierarchy = translate("CONFIG.DATASET.HIERARCHY");
     $scope.uuid4 = uuid4;
     $scope.params = [];
+    $scope.isShow=true;
 
     var treeID = 'dataSetTreeID'; // Set to a same value with treeDom
     var originalData = [];
@@ -81,14 +82,21 @@ cBoard.controller('datasetCtrl', function ($scope, $http, $state, $stateParams, 
     };
 
     $scope.editDs = function (ds) {
-        $http.post("dashboard/checkDatasource.do", {id: ds.data.datasource}).success(function (response) {
-            if (response.status == '1') {
-                doEditDs(ds);
-                $scope.doConfigParams();
-            } else {
-                ModalUtils.alert(translate("ADMIN.CONTACT_ADMIN") + "：Datasource/" + response.msg, "modal-danger", "lg");
-            }
-        });
+        console.log(ds.type);
+        if(ds.type){
+            $scope.isShow=false;
+            doEditDs(ds);
+        }else{
+            $scope.isShow=true;
+            $http.post("dashboard/checkDatasource.do", {id: ds.data.datasource}).success(function (response) {
+                if (response.status == '1') {
+                    doEditDs(ds);
+                    $scope.doConfigParams();
+                } else {
+                    ModalUtils.alert(translate("ADMIN.CONTACT_ADMIN") + "：Datasource/" + response.msg, "modal-danger", "lg");
+                }
+            });
+        }
     };
 
     var doEditDs = function (ds) {

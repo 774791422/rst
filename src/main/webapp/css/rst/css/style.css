@@ -104,7 +104,7 @@ textarea {
 .bg{
 	 width: 3840px;
    height: 1080px;
-	 background: url(/plugins/rst/image/bg.jpg) no-repeat;
+	background: url(/plugins/rst/image/bg.jpg) no-repeat;
    background-color: #000725;
    position: relative;
    overflow: scroll;

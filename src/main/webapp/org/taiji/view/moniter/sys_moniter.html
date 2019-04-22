@@ -1,0 +1,51 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">系统监控</h3>
+                    <div class="box-tools">
+                        <i class="fa fa-plus toolbar-icon" ng-click="newMonitor()" title="{{'COMMON.NEW'|translate}}" style="margin-top: 4px;"></i>
+                        <div class="input-group input-group-sm" style="width: 150px; margin-left: 5px; float: right;">
+                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>主机名称</th>
+                            <th>ip</th>
+                            <th>CPU</th>
+                            <th>硬盘</th>
+                            <th>内存</th>
+                            <th>状态</th>
+                            <th>{{'OPERATION.NAME'|translate}}</th>
+                        </tr>
+                        <tr ng-repeat="m in monitorList">
+                            <td>{{m.zjname}}</td>
+                            <td>{{m.host}}</td>
+                            <td>{{m.cpu}}</td>
+                            <td>{{m.disk}}</td>
+                            <td>{{m.men}}</td>
+                            <td>{{getState(m.state)}}</td>
+                            <td>
+                                <i class="fa fa-edit toolbar-icon" ng-click="updateMonitor(m.id)" title="{{'COMMON.EDIT'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-trash-o toolbar-icon" ng-if="m.id!=1" ng-click="deleteMonitor(m.id)" title="{{'COMMON.DELETE'|translate}}"></i>&nbsp;&nbsp;
+                                <i class="fa fa-bar-chart toolbar-icon"  ng-click="chartsMonitor(m.id)" title="图形展示"></i>&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

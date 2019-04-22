@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.QuotaDataLogDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.DashboardQuotaLog">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="datasource" property="datasource" jdbcType="INTEGER"/>
+        <id column="dataset" property="dataset" jdbcType="INTEGER"/>
+        <id column="quota" property="quota" jdbcType="VARCHAR"/>
+        <id column="quota_id" property="quotaId" jdbcType="INTEGER"/>
+        <id column="state" property="state" jdbcType="INTEGER"/>
+        <id column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectLog"  resultMap="BaseResultMap">
+        SELECT d.* FROM dashboard_quota_monitor_log d where d.datasource=#{arg1} and d.dataset=#{arg0} and d.quotasetid=#{arg2} and d.quota_id=#{arg3} and d.state=0
+    </select>
+    <select id="selectByState" resultType="java.util.Map">
+        select l.id,l.datasource,l.dataset,l.quota,d.dataset_name,s.source_name,l.update_time,l.content,l.create_time,l.state
+from dashboard_quota_monitor_log l, dashboard_dataset d ,dashboard_datasource s where
+l.dataset=d.dataset_id and l.datasource=s.datasource_id
+and l.quota_id=#{arg0}
+ORDER BY l.state,l.create_time
+    </select>
+    <select id="selectByALL" resultType="java.util.Map">
+        select l.id,l.datasource,l.dataset,l.quota,d.dataset_name,s.source_name,l.update_time,l.content,l.create_time,l.state
+from dashboard_quota_monitor_log l, dashboard_dataset d ,dashboard_datasource s where
+l.dataset=d.dataset_id and l.datasource=s.datasource_id
+ORDER BY l.state,l.create_time
+    </select>
+
+
+</mapper>

@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" ng-show="isShow">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">{{'CONFIG.DATASET.DATASOURCE'|translate}}</label>
@@ -67,7 +67,7 @@
                                 <div class="col-md-12" ng-show="datasource.name"
                                      ng-include="datasource.type?('dashboard/getConfigView.do?type=' + datasource.type + '&datasourceId=' + datasource.id + '&page=dataset.html'):''"></div>
                             </div>
-                            <div class="row">
+                            <div class="row" ng-show="isShow">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <div class="col-sm-offset-2 col-sm-2 col-md-3">

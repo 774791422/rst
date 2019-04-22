@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="cBoard" ng-controller="xmlayoutCtrl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>${title}</title>
+</head>
+<body>
+    <div ng-show="{{shows}}">
+        <button type="button" class="btn btn-primary"  ng-click="initLayout()">${init}</button>
+        <button type="button" ng-show="false" class="btn btn-primary" ng-click="loadLayout()">${load}</button>
+        <button type="button" class="btn btn-primary" ng-click="saveXmlayout()">${save}</button>
+    </div>
+    <div id="main_div" style="width:${width}px;height:${height}px;background-color: ${backgroundColor}">
+
+    </div>
+    <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <div id="style"></div>
+    <script>
+        $("#style").load("/layoutJs.html");
+    </script>
+</body>
+</html>

@@ -15,6 +15,40 @@
                 <option>$option</option>
             #end
         </select>
+    #elseif ($param.type == "file")
+        <input ng-model="curDatasource.config.$param.name" ng-show="false"/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="50%">名称</th>
+                <th ng-show="uploader.isHTML5">大小</th>
+                <th ng-show="uploader.isHTML5">进度</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in uploader.queue">
+                <td><strong>{{ item.file.name }}</strong></td>
+                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                <td ng-show="uploader.isHTML5">
+                    <div class="progress" style="margin-bottom: 0;">
+                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                </td>
+                <td nowrap>
+                    <button type="button" class="btn btn-danger btn-xs" ng-click="removeFile(item)">
+                        <span class="glyphicon glyphicon-trash"></span> 删除
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="file" nv-file-select uploader="uploader" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
     #end
 </div>
 #end

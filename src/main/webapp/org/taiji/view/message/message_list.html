@@ -1,0 +1,39 @@
+<!-- Content Wrapper. Contains page content -->
+<div id="inner-container" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">消息管理</h3>
+                    <div class="box-tools">
+
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>消息类别</th>
+                            <th>信息信息</th>
+                            <th>提示状态</th>
+                            <th>已读状态</th>
+                            <th>{{'OPERATION.NAME'|translate}}</th>
+                        </tr>
+                        <tr ng-repeat="message in messageList">
+                            <td>{{message.datatype}}</td>
+                            <td>{{message.message}}</td>
+                            <td>{{getTipState(message.tipstate)}}</td>
+                            <td>{{getReadstate(message.readstate)}}</td>
+                            <td>
+                                <i class="fa fa-television toolbar-icon" ng-click="viewMessage(message.id)" title="查看"></i>&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div><tm-pagination conf="paginationConf"></tm-pagination></div>
+        </div>
+    </div>
+</div>

@@ -4,3 +4,5 @@
      ng-include="'org/taiji/view/config/chart/template/keys.html'"></div>
 <div class="form-group" ng-if="configRule[curWidget.config.chart_type].filters!=0"
      ng-include="'org/taiji/view/config/chart/template/filters.html'"></div>
+<div class="form-group" ng-if="configRule[curWidget.config.chart_type].table==1"
+     ng-include="'org/taiji/view/config/chart/template/table.html'"></div>

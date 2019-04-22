@@ -60,7 +60,7 @@
             </a>
             <ul class="treeview-menu">
                 <li ui-sref-active="active" ng-if="isSon(menu,sonMenu)" ng-repeat="sonMenu in menuList">
-                    <a ui-sref="{{sonMenu.menuCode}}"><i></i>{{sonMenu.menuName|translate}}</a>
+                    <a ui-sref="{{sonMenu.menuCode}}" ui-sref-opts="{reload:true}"><i></i>{{sonMenu.menuName|translate}}</a>
                 </li>
             </ul>
         </li>

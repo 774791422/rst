@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.SceneDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.Scene">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="folder" property="folder" jdbcType="VARCHAR"/>
+        <result column="file_name" property="fileName" jdbcType="VARCHAR"/>
+        <result column="width" property="width" jdbcType="INTEGER"/>
+        <result column="height" property="height" jdbcType="INTEGER"/>
+        <result column="background_color" property="backgroundColor" jdbcType="VARCHAR"/>
+        <result column="info" property="info" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,folder,file_name,width,height,background_color,info,status,create_time,create_user
+    </sql>
+    <select id="list" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/> from t_scene
+        <where>
+            <if test="search!=null and search !=''">
+                name like CONCAT(CONCAT('%', #{search}),'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    <select id="listGenerate" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/> from t_scene where status=1 order by create_time desc
+    </select>
+</mapper>

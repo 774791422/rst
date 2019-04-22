@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.MonitorLogDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.DashboardSysMonitorLog">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="parent_host" property="parentHost" jdbcType="VARCHAR"/>
+        <result column="cpu" property="cpu" jdbcType="VARCHAR"/>
+        <result column="disk" property="disk" jdbcType="VARCHAR"/>
+        <result column="men" property="men" jdbcType="VARCHAR"/>
+        <result column="net_io" property="netIo" jdbcType="VARCHAR"/>
+        <result column="net_io_out" property="netIoOut" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="findList" resultType="java.util.Map">
+        select (@rowNum := @rowNum + 1) as rid,f.id,f.parent_id,f.parent_host,f.update_time,f.cpu,f.disk,f.men from dashboard_sys_monitor_log f ,
+        (Select (@rowNum :=0) ) dashboard_sys_monitor_log order by f.update_time desc
+    </select>
+    <select id="getMonitorByParentId"  resultType="org.taiji.pojo.DashboardSysMonitorLog">
+    select * from dashboard_sys_monitor_log where parent_id=#{arg0}
+    </select>
+    <!--select * from 数据表名 where 字段名 between date_add(now(), interval - 5 minute) and now();-->
+    <select id="findByParentId"   resultMap="BaseResultMap">
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time  from dashboard_sys_monitor_log g
+where update_time between date_add(now(), interval - 7 minute) and now()
+and parent_id=#{arg0}
+UNION
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time from dashboard_sys_monitor_log g
+where update_time  between date_add(now(), interval - 6 minute) and now()
+and parent_id=#{arg0}
+UNION
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time from dashboard_sys_monitor_log g
+where update_time between date_add(now(), interval - 5 minute) and now()
+and parent_id=#{arg0}
+UNION
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time from dashboard_sys_monitor_log g
+where update_time between date_add(now(), interval - 4 minute) and now()
+and parent_id=#{arg0}
+UNION
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time from dashboard_sys_monitor_log g
+where update_time between date_add(now(), interval - 3 minute) and now()
+and parent_id=#{arg0}
+UNION
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time from dashboard_sys_monitor_log g
+where update_time between date_add(now(), interval - 2 minute) and now()
+and parent_id=#{arg0}
+UNION
+select g.id,g.parent_id,g.parent_host,g.cpu,g.disk,g.men,g.net_io,g.net_io_out,g.update_time from dashboard_sys_monitor_log g
+where update_time between date_add(now(), interval - 1 minute) and now()
+and parent_id=#{arg0}
+    </select>
+
+</mapper>

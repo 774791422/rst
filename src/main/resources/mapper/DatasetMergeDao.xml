@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.DatasetMergeDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.DatasetMerge">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="dataset" property="dataset" jdbcType="VARCHAR"/>
+        <result column="active" property="active" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,dataset,active,create_time
+    </sql>
+    <select id="getDatasetList" resultType="java.util.Map">
+        select dataset_id,dataset_name from dashboard_dataset where type is null order by dataset_id
+    </select>
+</mapper>

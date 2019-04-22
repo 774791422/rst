@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title">修改指标配置</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="myForm" novalidate>
+        <input type="hidden" class="form-control" id="parentid" name="parentid" >
+        <input type="hidden" class="form-control" id="datasource" name="datasource" >
+        <div class="form-group">
+            <label class="col-sm-2 control-label">选择数据集</label>
+            <div class="col-sm-10">
+                <ui-select ng-model="quota.dataset" name="datasetId" required ng-change="change_update($select.selected)">
+                    <ui-select-match placeholder="请选择数据集">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices group-by="datasetGroup"
+                                       repeat="w.id as w in datasetList | filter:{name : $select.search}">
+                        <div ng-bind-html="w.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <span style="color:red" ng-show="myForm.datasetId.$touched && myForm.datasetId.$error.required">此项为必选项</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">选择指标</label>
+            <div class="col-sm-10">
+                <select ng-model="quota.quota" id="quotaData" class="btn btn-default form-control ui-select-toggle" ng-options="item.column as item.column for item in quotaList">
+                </select>
+                <span style="color:red" ng-show="myForm.zhibiao.$touched && myForm.zhibiao.$error.required">此项为必选项</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">预警值类型</label>
+            <div class="col-sm-10">
+                <select ng-model="quota.quotatype" id="quotatype"  class="btn btn-default form-control ui-select-toggle" ng-change="quotaType()">
+                    <option value="0" >数值</option>
+                    <option value="1" >内容</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">预警值</label>
+            <div class="col-sm-10">
+                <select  id="quota_value" ng-model="quota_value"  class="btn btn-default form-control ui-select-toggle">
+                    <option value="0" >高于</option>
+                    <option value="1" >低于</option>
+                    <option value="2" >等于</option>
+                    <option value="3" >大于等于</option>
+                    <option value="4" >小于等于</option>
+                    <option value="5" >不等于</option>
+                </select>
+                <input type="text" class="form-control" id="warnValue" ng-model="warnValue">
+                <span style="color:red" ng-show="myForm.warnValue.$touched && myForm.warnValue.$error.required">此项为必填项</span>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-disabled="myForm.$invalid"  ng-click="ok()">{{'COMMON.OK'|translate}}</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">
+        {{'COMMON.CANCEL'|translate}}
+    </button>
+</div>

@@ -13,6 +13,7 @@
         dataset_name  AS name,
         data_json     AS data,
         category_name AS categoryName,
+        type AS type,
         u.user_name   AS userName,
         u.login_name  AS loginName,
         create_time   AS createTime,
@@ -30,6 +31,7 @@
               category_name AS categoryName,
               u.user_name   AS userName,
               u.login_name  AS loginName,
+              type AS type,
               create_time   AS createTime,
               update_time   AS updateTime
          FROM dashboard_dataset s
@@ -52,6 +54,7 @@
               category_name AS categoryName,
               u.user_name   AS userName,
               u.login_name  AS loginName,
+              type AS type,
               create_time   AS createTime,
               update_time   AS updateTime
         FROM dashboard_dataset s
@@ -68,12 +71,17 @@
     </select>
 
     <select id="getDataset" resultType="org.taiji.pojo.DashboardDataset">
-       SELECT dataset_id id,user_id userId,dataset_name name,data_json data,category_name categoryName,create_time createTime,update_time updateTime FROM dashboard_dataset WHERE dataset_id = #{arg0}
+       SELECT dataset_id id,user_id userId,dataset_name name,data_json data,category_name categoryName,type type,create_time createTime,update_time updateTime FROM dashboard_dataset WHERE dataset_id = #{arg0}
     </select>
 
     <insert id="save" parameterType="org.taiji.pojo.DashboardDataset">
         <![CDATA[
         INSERT INTO dashboard_dataset(user_id,dataset_name,data_json,category_name) VALUES (#{userId},#{name},#{data},#{categoryName})
+        ]]>
+    </insert>
+    <insert id="saveDataset" parameterType="org.taiji.pojo.DashboardDataset">
+        <![CDATA[
+        INSERT INTO dashboard_dataset(user_id,dataset_name,data_json,category_name,type) VALUES (#{userId},#{name},#{data},#{categoryName},#{type})
         ]]>
     </insert>
 

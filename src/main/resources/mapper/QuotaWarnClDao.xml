@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.QuotaWarnClDao">
+    <select id="selectByWarnId" resultType="java.util.Map">
+      select a.id as warn_id,c.id,c.content,a.content as con,a.quota,a.source_name,a.dataset_name,c.update_time,c.create_time from (select l.id,l.content,d.dataset_name,s.source_name,l.quota from dashboard_quota_monitor_log l, dashboard_dataset d ,dashboard_datasource s where
+            l.dataset=d.dataset_id and l.datasource=s.datasource_id
+            )a LEFT JOIN dashboard_quota_warn_cl c
+            on a.id=c.warn_id
+            where a.id=#{arg0}
+    </select>
+    <select id="untreatedQuota" resultType="java.util.Map">
+        SELECT * FROM dashboard_quota_monitor_log WHERE STATE=0
+    </select>
+    <select id="selectByQuotaid" resultType="java.util.Map">
+            select count(id)as c,state from dashboard_quota_monitor_log where quota_id=#{arg0}
+            and update_time between #{arg1} and  #{arg2}
+            group by state
+    </select>
+
+</mapper>

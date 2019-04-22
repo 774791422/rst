@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.taiji.dao.LayoutDao">
+    <resultMap id="BaseResultMap" type="org.taiji.pojo.Layout">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="scene_id" property="sceneId" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="rows" property="rows" jdbcType="INTEGER"/>
+        <result column="cols" property="cols" jdbcType="INTEGER"/>
+        <result column="layout_info" property="layoutInfo" jdbcType="VARCHAR"/>
+        <result column="layout_widget" property="layoutWidget" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,scene_id,name,rows,cols,layout_info,layout_widget,create_time,create_user
+    </sql>
+    <select id="list" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/> from t_layout
+        <where>
+            <if test="search!=null and search !=''">
+                name like CONCAT(CONCAT('%', #{search}),'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

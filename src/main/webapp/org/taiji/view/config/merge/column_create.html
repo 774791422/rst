@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title">{{'CONFIG.MERGE.COLUMN_NEW'|translate}}</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="myForm" ng-init="getDatasetList();" novalidate>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">名称<span style="color:red">*</span></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="column.name" name="name" required>
+                <span style="color:red" ng-show="myForm.name.$touched && myForm.name.$error.required">此项为必填项</span>
+            </div>
+        </div>
+        <div class="form-group" ng-repeat="dataset in datasetList">
+            <label class="col-sm-2 control-label">{{dataset.name}}<span style="color:red">*</span></label>
+            <div class="col-sm-10">
+                <select id="{{dataset.id}}" name="columns" class="form-control">
+                    <option value="">请选择</option>
+                    <option ng-repeat="columnName in dataset.data">{{columnName}}</option>
+                </select>
+                <span></span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok()">{{'COMMON.OK'|translate}}</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">
+        {{'COMMON.CANCEL'|translate}}
+    </button>
+</div>

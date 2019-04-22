@@ -48,7 +48,16 @@
     "CREATE_TIME": "创建时间",
     "UPDATE_TIM": "最后修改时间",
     "FOLD_TREE": "展开所有树节点",
-    "UNFOLD_TREE": "收起所有树节点"
+    "UNFOLD_TREE": "收起所有树节点",
+    "UNZIP":"解压",
+    "TRANS":"转化",
+    "VIEW":"预览",
+    "GENERATE":"生成HTML",
+    "LAYOUT":"布局",
+    "PREV":"上一步",
+    "NEXT":"下一步",
+    "FINISH":"完成",
+    "PUBLISH":"发布"
   },
   "HOMEPAGE": {
     "TITLE": "首页",
@@ -78,7 +87,12 @@
     "INTERFACE": "接口管理",
     "INTERFACESET": "接口集管理",
     "ADMIN_MENU": "菜单管理",
-    "ADMIN_TEST": "功能测试"
+    "TEMPLATE": "模板管理",
+    "STYLE":"样式管理",
+    "VISUAL":"可视化管理",
+    "SCENE":"场景管理",
+    "LAYOUT":"布局管理",
+    "MERGE":"数据集融合"
   },
   "HEADER": {
     "SIGN_OUT": "注销",
@@ -89,7 +103,7 @@
     "CONFIRM_PASSWORD": "确认密码"
   },
   "FOOTER": {
-    "COPYRIGHT": "欢迎使用Data Intergration Display Platform",
+    "COPYRIGHT": "欢迎使用Data Analysis And Display Platform",
     "VERSION": "版本"
   },
   "DASHBOARD": {
@@ -231,7 +245,14 @@
       "CHINA_MAP":"中国地图（本地）",
       "CHINA_MAP_BMAP":"中国地图（百度）",
       "RELATION": "关系图",
-      "WORLD_MAP": "世界地图"
+      "WORLD_MAP": "世界地图",
+      "TEXT":"文本",
+      "SHOW_TABLE":"是否显示列表",
+      "SHOW_TABLE_YES":"是",
+      "SHOW_TABLE_NO":"否",
+      "PREVIEW":"预览",
+      "QUERY":"查询",
+      "OPTION":"选项"
     },
     "DASHBOARD": {
       "DASHBOARD": "看板",
@@ -358,6 +379,18 @@
     "SHARE_RES": {
       "YOUR_RES": "你的资源",
       "SHARE": "分享"
+    },
+    "MERGE":{
+      "MERGE":"数据集融合",
+      "NAME":"名称",
+      "ACTIVE":"状态",
+      "MERGE_NEW":"新增",
+      "MERGE_EDIT":"编辑",
+      "MAPPING":"字段映射",
+      "COLUMN_NAME":"字段名称",
+      "COLUMN_STATE":"是否配置完成",
+      "COLUMN_NEW":"新增字段",
+      "COLUMN_EDIT":"编辑字段"
     }
   },
   "ADMIN": {
@@ -450,5 +483,49 @@
   },
   "OPERATION":{
     "NAME":"操作"
+  },
+  "TEMPLATE":{
+      "STYLE":{
+        "STYLE":"样式管理",
+        "NAME":"名称",
+        "FOLDER":"所在文件夹",
+        "STYLE_NEW":"新增样式",
+        "STYLE_EDIT":"编辑样式"
+      },
+    "TEMPLATE":{
+      "TEMPLATE":"模板管理",
+      "NAME":"名称",
+      "FOLDER":"所在文件夹",
+      "TEMPLATE_NEW":"新增模板",
+      "TEMPLATE_EDIT":"编辑模板"
+    }
+  },
+  "VISUAL":{
+      "SCENE":{
+        "SCENE":"场景管理",
+        "NAME":"名称",
+        "FOLDER":"所在文件夹",
+        "STATUS":"是否生成HTML",
+        "SCENE_NEW":"新增场景",
+        "SCENE_EDIT":"编辑场景"
+      },
+      "LAYOUT":{
+        "LAYOUT":"布局管理",
+        "DESIGN":"布局设计",
+        "NAME":"名称",
+        "ROWS":"行",
+        "COLS":"列",
+        "LAYOUT_NEW":"新增布局",
+        "WIDGET_SELECT":"选择图表"
+      }
+  },
+  "MONITOR":{
+    "KNOWLEDGE":{
+      "KNOWLEDGE":"知识库管理",
+      "TITLE":"标题",
+      "KEYWORD":"关键字",
+      "KNOWLEDGE_NEW":"新增知识库",
+      "KNOWLEDGE_EDIT":"编辑知识库"
+    }
   }
 }
